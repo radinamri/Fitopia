@@ -15,12 +15,20 @@ export default function Home() {
                 “Your Perfect Outfit, One Click Away!”
               </p>
             </div>
-            <Link
-              className="border-2 border-[#171717] rounded-xl p-2 pl-4 pr-4 font-bold text-lg dark:text-[#171717] hover:text-white hover:bg-[#171717] transition-colors duration-200"
-              href={"/"}
-            >
-              Virtual Try On
-            </Link>
+            <div className="flex flex-row w-full justify-start items-center gap-8">
+              <Link
+                className="border-2 border-[#171717] rounded-xl p-2 pl-4 pr-4 font-bold text-md dark:text-[#171717] hover:text-white hover:bg-[#171717] transition-colors duration-200"
+                href={"/"}
+              >
+                Virtual Try On
+              </Link>
+              <Link
+                className="font-medium text-md dark:text-[#171717] hover:underline hover:underline-offset-4 transition-colors duration-200"
+                href={"/about"}
+              >
+                About FITOPIA-AI
+              </Link>
+            </div>
           </div>
           <ImageComparison leftSource="/before.png" rightSource="/after.png" />
         </div>

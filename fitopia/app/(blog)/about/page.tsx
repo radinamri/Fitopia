@@ -69,7 +69,7 @@ export default function About() {
             </p>
             <Link
               className="font-medium text-md dark:text-[#171717] hover:underline hover:underline-offset-4 transition-colors duration-200"
-              href={"/"}
+              href={"/try-on"}
             >
               Click Here
             </Link>

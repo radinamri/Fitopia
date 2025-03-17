@@ -7,10 +7,10 @@ import RoundBelly from "@/public/body-shapes/male/belly/Round";
 import { useState } from "react";
 
 export default function MaleBodyShapeSelection({
-//   onNext,
+  onNext,
   onBack,
 }: {
-//   onNext: () => void;
+  onNext: (data: { shoulder: string; belly: string }) => void;
   onBack: () => void;
 }) {
   const [selectedMaleShoulder, setSelectedMaleShoulder] = useState<
@@ -19,6 +19,12 @@ export default function MaleBodyShapeSelection({
   const [selectedMaleBelly, setSelectedMaleBelly] = useState<
     "Flat" | "Average" | "Round" | null
   >(null);
+
+  const handleNext = () => {
+    if (selectedMaleShoulder && selectedMaleBelly) {
+      onNext({ shoulder: selectedMaleShoulder, belly: selectedMaleBelly });
+    }
+  };
 
   return (
     <div className="flex flex-col justify-center items-center gap-4">
@@ -101,8 +107,8 @@ export default function MaleBodyShapeSelection({
         </button>
         <button
           className="border-2 border-[#171717] rounded-xl p-2 pl-4 pr-4 font-medium text-md dark:text-[#171717] hover:text-white hover:bg-[#171717] transition-colors duration-200"
-        //   onClick={() => selectedGender && onNext(selectedGender)}
-        //   disabled={!selectedGender}
+          onClick={handleNext}
+          disabled={!selectedMaleShoulder && !selectedMaleBelly}
         >
           Next
         </button>

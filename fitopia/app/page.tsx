@@ -113,9 +113,15 @@ export default function Home() {
                 Choose Your Body Shape
               </p>
               {gender === "Male" ? (
-                <MaleBodyShapeSelection onBack={handleBack} />
+                <MaleBodyShapeSelection
+                  onNext={() => handleNext()}
+                  onBack={handleBack}
+                />
               ) : (
-                <FemaleBodyShapeSelection onBack={handleBack} />
+                <FemaleBodyShapeSelection
+                  onNext={() => handleNext()}
+                  onBack={handleBack}
+                />
               )}
             </div>
           )}

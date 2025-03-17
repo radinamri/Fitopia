@@ -9,10 +9,10 @@ import CurvierFigure from "@/public/body-shapes/female/belly/Curvier";
 import { useState } from "react";
 
 export default function FemaleBodyShapeSelection({
-//   onNext,
+  onNext,
   onBack,
 }: {
-//   onNext: () => void;
+  onNext: (data: { bodyShape: string; belly: string }) => void;
   onBack: () => void;
 }) {
   const [selectedFemaleBodyShape, setSelectedFemaleBodyShape] = useState<
@@ -21,6 +21,15 @@ export default function FemaleBodyShapeSelection({
   const [selectedFemaleBelly, setSelectedFemaleBelly] = useState<
     "Flatter" | "Average" | "Curvier" | null
   >(null);
+
+  const handleNext = () => {
+    if (selectedFemaleBodyShape && selectedFemaleBelly) {
+      onNext({
+        bodyShape: selectedFemaleBodyShape,
+        belly: selectedFemaleBelly,
+      });
+    }
+  };
 
   return (
     <div className="flex flex-col justify-center items-center gap-4">
@@ -127,8 +136,8 @@ export default function FemaleBodyShapeSelection({
         </button>
         <button
           className="border-2 border-[#171717] rounded-xl p-2 pl-4 pr-4 font-medium text-md dark:text-[#171717] hover:text-white hover:bg-[#171717] transition-colors duration-200"
-        //   onClick={() => selectedGender && onNext(selectedGender)}
-        //   disabled={!selectedGender}
+          onClick={handleNext}
+          disabled={!selectedFemaleBodyShape && !selectedFemaleBelly}
         >
           Next
         </button>

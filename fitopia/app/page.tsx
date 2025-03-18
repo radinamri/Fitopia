@@ -9,6 +9,7 @@ import Modal from "@/components/Modal";
 import GenderSelection from "@/components/GenderSelection";
 import MaleBodyShapeSelection from "@/components/MaleBodyShapeSelection";
 import FemaleBodyShapeSelection from "@/components/FemaleBodyShapeSelection";
+import HeightSelection from "@/components/HeightSelection";
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -127,31 +128,7 @@ export default function Home() {
           )}
 
           {step === 2 && (
-            <div className="flex flex-col gap-4">
-              <p className="font-bold text-2xl text-[#171717] mb-4">
-                Enter Your Email
-              </p>
-              <input
-                type="email"
-                placeholder="Email"
-                className="border-2 border-[#171717] text-[#171717] p-2 rounded-lg w-full"
-                required
-              />
-              <div className="flex flex-row justify-center items-center gap-4 mt-4">
-                <button
-                  onClick={handleBack}
-                  className="border-2 border-[#171717] p-2 rounded-lg"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={handleNext}
-                  className="border-2 border-[#171717] p-2 rounded-lg"
-                >
-                  Next
-                </button>
-              </div>
-            </div>
+            <HeightSelection onNext={() => handleNext()} onBack={handleBack} />
           )}
 
           {step === 3 && (

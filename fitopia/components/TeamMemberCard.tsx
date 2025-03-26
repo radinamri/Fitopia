@@ -1,6 +1,7 @@
 import Github from "@/public/social-media-icons/Github";
 import LinkedIn from "@/public/social-media-icons/LinkedIn";
 import Image from "next/image";
+import Link from "next/link";
 
 interface TeamMemberCardProps {
   name: string;
@@ -28,8 +29,18 @@ export default function TeamMemberCard({
           <p className="font-bold text-md">{role}</p>
         </div>
         <div className="flex flex-row gap-2">
-          <Github />
-          <LinkedIn />
+          <Link
+            className="transition-transform duration-200 hover:scale-105"
+            href={"/"}
+          >
+            <Github />
+          </Link>
+          <Link
+            className="transition-transform duration-200 hover:scale-105"
+            href={"/"}
+          >
+            <LinkedIn />
+          </Link>
         </div>
       </div>
     </div>

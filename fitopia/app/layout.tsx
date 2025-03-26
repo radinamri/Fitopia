@@ -49,18 +49,30 @@ export default function RootLayout({
                     alt="Logo"
                   />
                 </Link>
-                <Link href={"/"} className="font-semibold text-lg">
+                <Link
+                  href={"/"}
+                  className="font-semibold text-lg transition-transform duration-200 hover:scale-105"
+                >
                   FITOPIA-AI
                 </Link>
               </div>
               <div className="flex flex-row justify-center items-center text-md gap-8">
-                <Link className="font-semibold text-lg" href={"/stores"}>
+                <Link
+                  className="font-semibold text-lg transition-transform duration-200 hover:scale-105"
+                  href={"/stores"}
+                >
                   Stores
                 </Link>
-                <Link className="font-semibold text-lg" href={"/"}>
+                <Link
+                  className="font-semibold text-lg transition-transform duration-200 hover:scale-105"
+                  href={"/"}
+                >
                   Pricing
                 </Link>
-                <Link className="font-semibold text-lg" href={"/about"}>
+                <Link
+                  className="font-semibold text-lg transition-transform duration-200 hover:scale-105"
+                  href={"/about"}
+                >
                   About
                 </Link>
               </div>
@@ -102,22 +114,40 @@ export default function RootLayout({
                 </div>
               </div>
               <div className="flex flex-row w-full min-h-fit justify-center items-center gap-4">
-                <Link href={"/"}>
+                <Link
+                  className="transition-transform duration-200 hover:scale-105"
+                  href={"/"}
+                >
                   <Facebook />
                 </Link>
-                <Link href={"/"}>
+                <Link
+                  className="transition-transform duration-200 hover:scale-105"
+                  href={"/"}
+                >
                   <Instagram />
                 </Link>
-                <Link href={"/"}>
+                <Link
+                  className="transition-transform duration-200 hover:scale-105"
+                  href={"/"}
+                >
                   <Youtube />
                 </Link>
-                <Link href={"/"}>
+                <Link
+                  className="transition-transform duration-200 hover:scale-105"
+                  href={"/"}
+                >
                   <TwitterX />
                 </Link>
-                <Link href={"/"}>
+                <Link
+                  className="transition-transform duration-200 hover:scale-105"
+                  href={"/"}
+                >
                   <Pinterest />
                 </Link>
-                <Link href={"/"}>
+                <Link
+                  className="transition-transform duration-200 hover:scale-105"
+                  href={"/"}
+                >
                   <LinkedIn />
                 </Link>
               </div>

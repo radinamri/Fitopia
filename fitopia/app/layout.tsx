@@ -54,7 +54,7 @@ export default function RootLayout({
                 </Link>
               </div>
               <div className="flex flex-row justify-center items-center text-md gap-8">
-                <Link className="font-semibold text-lg" href={"/"}>
+                <Link className="font-semibold text-lg" href={"/stores"}>
                   Stores
                 </Link>
                 <Link className="font-semibold text-lg" href={"/"}>
@@ -74,7 +74,7 @@ export default function RootLayout({
               <div className="flex flex-row w-full min-h-fit justify-center items-center gap-8">
                 <Link
                   className="font-normal text-sm hover:underline hover:underline-offset-4 transition-colors duration-200"
-                  href={"/"}
+                  href={"/stores"}
                 >
                   Stores
                 </Link>

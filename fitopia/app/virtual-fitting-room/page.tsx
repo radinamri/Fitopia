@@ -9,7 +9,8 @@ export default function VirtualFittingRoom() {
   const [selectedClothingImage, setSelectedClothingImage] = useState<
     string | null
   >(null);
-//   const [resultImage, setResultImage] = useState<string | null>(null);
+  const [resultImage, setResultImage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -24,6 +25,47 @@ export default function VirtualFittingRoom() {
     if (event.target.files && event.target.files[0]) {
       const imageUrl = URL.createObjectURL(event.target.files[0]);
       setSelectedClothingImage(imageUrl);
+    }
+  };
+
+  const handleTryOn = async () => {
+    if (!selectedImage || !selectedClothingImage) {
+      alert("Please upload both your photo and a clothing item.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append(
+        "userPhoto",
+        await fetch(selectedImage).then((r) => r.blob()),
+        "user.jpg"
+      );
+      formData.append(
+        "clothingPhoto",
+        await fetch(selectedClothingImage).then((r) => r.blob()),
+        "clothing.png"
+      );
+
+      const response = await fetch("http://localhost:8000/api/try-on", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+      if (result.status === "success") {
+        const resultResponse = await fetch(
+          `http://localhost:8000/api/result/${result.result_id}`
+        );
+        const resultData = await resultResponse.json();
+        setResultImage(`data:image/png;base64,${resultData.resultPhoto}`);
+      }
+    } catch (error) {
+      console.error("Try-on error:", error);
+      alert("Error processing try-on");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -78,12 +120,21 @@ export default function VirtualFittingRoom() {
             </div>
           )}
         </div>
-        <ArrowRightCircle />
+        <div className="flex flex-col justify-center items-center gap-8">
+          <ArrowRightCircle />
+          <button
+            onClick={handleTryOn}
+            disabled={loading}
+            className="border-2 rounded-xl p-2 font-bold text-md hover:bg-gray-800 hover:text-white transition-colors"
+          >
+            {loading ? "Processing..." : "Try On"}
+          </button>
+        </div>
         {/* Result Photo Section */}
         <div className="relative flex justify-center items-center w-[300px] h-[400px] rounded-3xl shadow-xl border-2 border-[#171717] dark:border-white p-1">
-          {selectedImage ? (
+          {resultImage ? (
             <Image
-              src={selectedImage}
+              src={resultImage}
               alt="Result Image"
               layout="fill"
               objectFit="cover"

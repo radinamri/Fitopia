@@ -63,7 +63,7 @@ export default function Home() {
             </Link>
             <Link
               className="flex flex-row justify-center items-center font-medium text-md text-white hover:underline hover:underline-offset-4 transition-colors duration-200 gap-1"
-              href={"/"}
+              href={"/virtual-fitting-room"}
             >
               <Camera />
               Upload Photo

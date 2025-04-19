@@ -11,6 +11,7 @@ export default function VirtualFittingRoom() {
   >(null);
   const [resultImage, setResultImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [category, setCategory] = useState("upper");
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -47,6 +48,7 @@ export default function VirtualFittingRoom() {
         await fetch(selectedClothingImage).then((r) => r.blob()),
         "clothing.png"
       );
+      formData.append("category", category);
 
       const response = await fetch("http://localhost:8000/api/try-on", {
         method: "POST",
@@ -121,11 +123,21 @@ export default function VirtualFittingRoom() {
           )}
         </div>
         <div className="flex flex-col justify-center items-center gap-8">
+          {/* 🔥 Dropdown Category Selector */}
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="border-2 border-[#171717] dark:border-white rounded-lg p-2 text-md font-bold"
+          >
+            <option value="upper">Upper</option>
+            <option value="lower">Lower</option>
+            <option value="overall">Overall</option>
+          </select>
           <ArrowRightCircle />
           <button
             onClick={handleTryOn}
             disabled={loading}
-            className="border-2 rounded-xl p-2 font-bold text-md hover:bg-gray-800 hover:text-white transition-colors"
+            className="border-2 rounded-xl p-2 font-bold text-md hover:bg-[#171717] hover:text-white dark:hover:bg-white dark:hover:text-[#171717] transition-colors"
           >
             {loading ? "Processing..." : "Try On"}
           </button>

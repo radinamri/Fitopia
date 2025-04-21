@@ -28,45 +28,33 @@ export default function Home() {
     setIsModalOpen(false);
   };
 
-  // const handleSubmitForm = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   setStep("gender");
-  // };
-
   return (
     <UserDataProvider>
       <div className="flex flex-col w-full min-h-screen justify-center items-center gap-16 font-[family-name:var(--font-geist-sans)]">
         <video
-          className="w-full h-full object-cover filter brightness-20 z-1"
+          className="w-full h-full object-cover filter brightness-90 z-1"
           src="/videos/virtual-try-on.mp4"
           autoPlay
           loop
           muted
         />
-        <div className="absolute top-50 left-0 right-0 flex flex-col items-center justify-center gap-8 z-20">
+        <div className="absolute top-50 left-0 right-0 flex flex-col items-center justify-center gap-4 z-20">
           <div className="flex flex-col justify-center items-center">
-            <p className="font-bold text-4xl text-white">
+            <p className="font-bold text-4xl text-[#171717]">
               TRY ON The Future of Fashion
             </p>
-            <p className="font-bold text-2xl text-white">
+            <p className="font-bold text-2xl text-[#171717]">
               “Your Perfect Outfit, One Click Away!”
             </p>
           </div>
           <div className="flex flex-row justify-center items-center gap-16">
             <Link
-              className="flex flex-row justify-center items-center font-medium text-md text-white hover:underline hover:underline-offset-4 transition-colors duration-200 gap-1"
-              href={"/"}
-              onClick={() => setIsModalOpen(true)}
-            >
-              <PersonStanding />
-              Create Avatar
-            </Link>
-            <Link
-              className="flex flex-row justify-center items-center font-medium text-md text-white hover:underline hover:underline-offset-4 transition-colors duration-200 gap-1"
+              className="flex flex-row justify-center items-center font-medium text-md bg-[#171717] text-white transition-colors duration-200 gap-1 p-4 rounded-xl shadow-2xl hover:scale-105 pl-16 pr-16"
               href={"/virtual-fitting-room"}
             >
               <Camera />
-              Upload Photo
+              <PersonStanding />
+              TRY ON in your FITOPIA-ROOM
             </Link>
           </div>
         </div>

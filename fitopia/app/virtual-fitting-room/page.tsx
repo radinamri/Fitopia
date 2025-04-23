@@ -137,7 +137,7 @@ export default function VirtualFittingRoom() {
       <div className="flex flex-row justify-between items-center gap-8">
         {/* Model Photo Section */}
         <div className="flex flex-col justify-center items-center gap-4">
-          <div className="relative flex justify-center items-center w-[300px] h-[400px] rounded-3xl shadow-xl border-2 border-[#171717] dark:border-white p-1">
+          <div className="relative flex justify-center items-center w-[300px] h-[400px] rounded-3xl shadow-xl border-2 border-[#171717] dark:border-white">
             {selectedImage || selectedPersonModel ? (
               <>
                 <Image
@@ -158,9 +158,21 @@ export default function VirtualFittingRoom() {
                 </button>
               </>
             ) : (
-              <div className="flex flex-col justify-center items-center gap-8 h-full w-full">
-                <Upload />
-                <p className="font-bold text-md">Upload Your Photo</p>
+              <div className="relative flex justify-center items-center w-full h-full">
+                {/* Background Image */}
+                <Image
+                  src="/avatars/background.png"
+                  alt="Background"
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-3xl opacity-50 z-0"
+                />
+                {/* Upload UI */}
+                <div className="flex flex-col justify-center items-center gap-4 z-10">
+                  <Upload />
+                  <p className="font-bold text-md">Upload Your Photo</p>
+                </div>
+                {/* File input */}
                 <input
                   type="file"
                   accept="image/*"
@@ -250,7 +262,7 @@ export default function VirtualFittingRoom() {
               className="rounded-3xl"
             />
           ) : (
-            <div className="flex flex-col justify-center items-center gap-8">
+            <div className="flex flex-col justify-center items-center gap-4">
               <Upload />
               <p className="font-bold text-md">Upload Your Clothing Photo</p>
               <input

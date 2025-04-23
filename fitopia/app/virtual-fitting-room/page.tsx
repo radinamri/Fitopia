@@ -3,8 +3,48 @@ import { useState } from "react";
 import Upload from "@/public/icons/Upload";
 import Image from "next/image";
 import ArrowRightCircle from "@/public/icons/ArrowRightCircle";
+import XIcon from "@/public/icons/XIcon";
+
+const menModels = [
+  { src: "/avatars/13.png" },
+  { src: "/avatars/15.png" },
+  { src: "/avatars/16.png" },
+  { src: "/avatars/17.png" },
+  { src: "/avatars/19.png" },
+  { src: "/avatars/20.png" },
+  { src: "/avatars/22.png" },
+  { src: "/avatars/24.png" },
+  { src: "/avatars/25.png" },
+];
+
+const womenModels = [
+  { src: "/avatars/1.png" },
+  { src: "/avatars/2.png" },
+  { src: "/avatars/3.png" },
+  { src: "/avatars/4.png" },
+  { src: "/avatars/5.png" },
+  { src: "/avatars/6.png" },
+  { src: "/avatars/7.png" },
+  { src: "/avatars/8.png" },
+  { src: "/avatars/9.png" },
+  { src: "/avatars/10.png" },
+  { src: "/avatars/11.png" },
+  { src: "/avatars/12.png" },
+  { src: "/avatars/14.png" },
+  { src: "/avatars/18.png" },
+  { src: "/avatars/21.png" },
+  { src: "/avatars/23.png" },
+  { src: "/avatars/26.png" },
+  { src: "/avatars/27.png" },
+  { src: "/avatars/28.png" },
+  { src: "/avatars/29.png" },
+  { src: "/avatars/30.png" },
+  { src: "/avatars/31.png" },
+  { src: "/avatars/32.png" },
+];
 
 export default function VirtualFittingRoom() {
+  const MODELS_PER_PAGE = 8;
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedClothingImage, setSelectedClothingImage] = useState<
     string | null
@@ -12,12 +52,23 @@ export default function VirtualFittingRoom() {
   const [resultImage, setResultImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [category, setCategory] = useState("upper");
+  const [selectedPersonModel, setSelectedPersonModel] = useState<{
+    src: string;
+  } | null>(null);
+  const [activeGender, setActiveGender] = useState<"men" | "women">("men");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const imageUrl = URL.createObjectURL(event.target.files[0]);
       setSelectedImage(imageUrl);
+      setSelectedPersonModel(null); // Clear selected model if uploading
     }
+  };
+
+  const handlePersonModelClick = (model: { src: string }) => {
+    setSelectedPersonModel(model);
+    setSelectedImage(null); // Clear uploaded image if choosing a model
   };
 
   const handleClothingImageChange = (
@@ -30,8 +81,10 @@ export default function VirtualFittingRoom() {
   };
 
   const handleTryOn = async () => {
-    if (!selectedImage || !selectedClothingImage) {
-      alert("Please upload both your photo and a clothing item.");
+    const sourceImage = selectedImage || selectedPersonModel?.src;
+
+    if (!sourceImage || !selectedClothingImage) {
+      alert("Please upload or select both a person photo and a clothing item.");
       return;
     }
 
@@ -40,7 +93,7 @@ export default function VirtualFittingRoom() {
       const formData = new FormData();
       formData.append(
         "userPhoto",
-        await fetch(selectedImage).then((r) => r.blob()),
+        await fetch(sourceImage).then((r) => r.blob()),
         "user.jpg"
       );
       formData.append(
@@ -71,32 +124,119 @@ export default function VirtualFittingRoom() {
     }
   };
 
+  const currentModels = activeGender === "men" ? menModels : womenModels;
+  const totalPages = Math.ceil(currentModels.length / MODELS_PER_PAGE);
+  const paginatedModels = currentModels.slice(
+    (currentPage - 1) * MODELS_PER_PAGE,
+    currentPage * MODELS_PER_PAGE
+  );
+
   return (
     <div className="flex flex-col w-full min-h-screen justify-center items-center gap-16 font-[family-name:var(--font-geist-sans)]">
       {/* <div className="flex flex-col w-[85%] h-auto justify-center items-center bg-white rounded-4xl shadow-xl p-16 gap-8"> */}
       <div className="flex flex-row justify-between items-center gap-8">
         {/* Model Photo Section */}
-        <div className="relative flex justify-center items-center w-[300px] h-[400px] rounded-3xl shadow-xl border-2 border-[#171717] dark:border-white p-1">
-          {selectedImage ? (
-            <Image
-              src={selectedImage}
-              alt="Uploaded Image"
-              layout="fill"
-              objectFit="cover"
-              className="rounded-3xl"
-            />
-          ) : (
-            <div className="flex flex-col justify-center items-center gap-8">
-              <Upload />
-              <p className="font-bold text-md">Upload Your Photo</p>
-              <input
-                type="file"
-                accept="image/*"
-                className="absolute w-full h-full opacity-0 cursor-pointer"
-                onChange={handleImageChange}
-              />
+        <div className="flex flex-col justify-center items-center gap-4">
+          <div className="relative flex justify-center items-center w-[300px] h-[400px] rounded-3xl shadow-xl border-2 border-[#171717] dark:border-white p-1">
+            {selectedImage || selectedPersonModel ? (
+              <>
+                <Image
+                  src={selectedImage || selectedPersonModel!.src}
+                  alt="Person Image"
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-3xl"
+                />
+                <button
+                  onClick={() => {
+                    setSelectedImage(null);
+                    setSelectedPersonModel(null);
+                  }}
+                  className="absolute top-2 right-2 bg-[#171717] p-1 rounded-full shadow-2xl hover:scale-105 transition-transform"
+                >
+                  <XIcon />
+                </button>
+              </>
+            ) : (
+              <div className="flex flex-col justify-center items-center gap-8 h-full w-full">
+                <Upload />
+                <p className="font-bold text-md">Upload Your Photo</p>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="absolute w-full h-full opacity-0 cursor-pointer"
+                  onChange={handleImageChange}
+                />
+              </div>
+            )}
+          </div>
+          {/* Gender Selection */}
+          <div className="flex flex-row justify-center items-center gap-8">
+            <div
+              className={`font-medium text-md cursor-pointer transition-colors duration-200 ${
+                activeGender === "men"
+                  ? "underline underline-offset-4 text-[#171717] dark:text-white"
+                  : "text-gray-500"
+              }`}
+              onClick={() => {
+                setActiveGender("men");
+                setCurrentPage(1);
+              }}
+            >
+              Men
             </div>
-          )}
+            <div
+              className={`font-medium text-md cursor-pointer transition-colors duration-200 ${
+                activeGender === "women"
+                  ? "underline underline-offset-4 text-[#171717] dark:text-white"
+                  : "text-gray-500"
+              }`}
+              onClick={() => {
+                setActiveGender("women");
+                setCurrentPage(1);
+              }}
+            >
+              Women
+            </div>
+          </div>
+          {/* Person Model Selector */}
+          <div className="grid grid-cols-4 gap-2">
+            {paginatedModels.map((model, idx) => (
+              <div
+                key={idx}
+                onClick={() => handlePersonModelClick(model)}
+                className={`w-[70px] h-[91px] border-2 rounded-xl cursor-pointer overflow-hidden transition-transform duration-200 hover:scale-105 ${
+                  selectedPersonModel?.src === model.src
+                    ? "border-[#171717] dark:border-white"
+                    : "border-gray-300"
+                }`}
+              >
+                <Image
+                  src={model.src}
+                  alt={`Model ${idx + 1}`}
+                  width={70}
+                  height={91}
+                  objectFit="cover"
+                />
+              </div>
+            ))}
+          </div>
+          {/* Pagination Controls */}
+          <div className="flex justify-center items-center gap-2 mt-2">
+            {[...Array(totalPages)].map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentPage(i + 1)}
+                className={`text-sm font-medium px-2 py-1 rounded-md border-1 ${
+                  currentPage === i + 1
+                    ? "bg-[#171717] text-white dark:bg-white dark:text-[#171717]"
+                    : "text-[#171717] border-[#171717] dark:text-white dark:border-white"
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
         </div>
         <ArrowRightCircle />
         {/* Upload Clothing Photo Section */}
@@ -159,7 +299,6 @@ export default function VirtualFittingRoom() {
           )}
         </div>
       </div>
-      {/* </div> */}
     </div>
   );
 }

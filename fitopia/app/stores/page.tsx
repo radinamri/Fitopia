@@ -110,7 +110,7 @@ export default function Stores() {
                 onClick={() => handleLogoClick({ component: Logo, name, link })}
               >
                 <Logo />
-                <p className="mt-4 text-xl font-bold text-[#2E2A2B] transition-all duration-200 hover:font-extrabold hover:underline hover:underline-offset-4">
+                <p className="mt-4 text-xl font-bold text-[#171717] transition-all duration-200 hover:font-extrabold hover:underline hover:underline-offset-4">
                   {name}
                 </p>
               </div>

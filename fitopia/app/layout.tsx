@@ -3,13 +3,13 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import Image from "next/image";
-import CCircle from "@/public/social-media-icons/CCircle";
-import Facebook from "@/public/social-media-icons/Facebook";
-import Instagram from "@/public/social-media-icons/Instagram";
-import Youtube from "@/public/social-media-icons/Youtube";
-import TwitterX from "@/public/social-media-icons/TwitterX";
-import Pinterest from "@/public/social-media-icons/Pinterest";
-import LinkedIn from "@/public/social-media-icons/LinkedIn";
+import CCircle from "@/public/icons/social-media-icons/CCircle";
+import Facebook from "@/public/icons/social-media-icons/Facebook";
+import Instagram from "@/public/icons/social-media-icons/Instagram";
+import Youtube from "@/public/icons/social-media-icons/Youtube";
+import TwitterX from "@/public/icons/social-media-icons/TwitterX";
+import Pinterest from "@/public/icons/social-media-icons/Pinterest";
+import LinkedIn from "@/public/icons/social-media-icons/LinkedIn";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

@@ -1,5 +1,5 @@
-import Female from "@/public/genders/Female";
-import Male from "@/public/genders/Male";
+import Female from "@/public/icons/genders/Female";
+import Male from "@/public/icons/genders/Male";
 import { useState } from "react";
 
 export default function GenderSelection({

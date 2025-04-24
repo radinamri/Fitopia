@@ -4,43 +4,65 @@ import Upload from "@/public/icons/Upload";
 import Image from "next/image";
 import ArrowRightCircle from "@/public/icons/ArrowRightCircle";
 import XIcon from "@/public/icons/XIcon";
+import Link from "next/link";
 
 const menModels = [
-  { src: "/avatars/13.png" },
-  { src: "/avatars/15.png" },
-  { src: "/avatars/16.png" },
-  { src: "/avatars/17.png" },
-  { src: "/avatars/19.png" },
-  { src: "/avatars/20.png" },
-  { src: "/avatars/22.png" },
-  { src: "/avatars/24.png" },
-  { src: "/avatars/25.png" },
+  { src: "/models/men/1.png" },
+  { src: "/models/men/2.png" },
+  { src: "/models/men/3.png" },
+  { src: "/models/men/4.png" },
+  { src: "/models/men/5.png" },
+  { src: "/models/men/6.png" },
+  { src: "/models/men/7.png" },
+  { src: "/models/men/8.png" },
+  { src: "/models/men/9.png" },
+  { src: "/models/men/10.png" },
+  { src: "/models/men/11.png" },
+  { src: "/models/men/12.png" },
+  { src: "/models/men/13.png" },
+  { src: "/models/men/14.png" },
+  { src: "/models/men/15.png" },
+  { src: "/models/men/16.png" },
 ];
 
 const womenModels = [
-  { src: "/avatars/1.png" },
-  { src: "/avatars/2.png" },
-  { src: "/avatars/3.png" },
-  { src: "/avatars/4.png" },
-  { src: "/avatars/5.png" },
-  { src: "/avatars/6.png" },
-  { src: "/avatars/7.png" },
-  { src: "/avatars/8.png" },
-  { src: "/avatars/9.png" },
-  { src: "/avatars/10.png" },
-  { src: "/avatars/11.png" },
-  { src: "/avatars/12.png" },
-  { src: "/avatars/14.png" },
-  { src: "/avatars/18.png" },
-  { src: "/avatars/21.png" },
-  { src: "/avatars/23.png" },
-  { src: "/avatars/26.png" },
-  { src: "/avatars/27.png" },
-  { src: "/avatars/28.png" },
-  { src: "/avatars/29.png" },
-  { src: "/avatars/30.png" },
-  { src: "/avatars/31.png" },
-  { src: "/avatars/32.png" },
+  { src: "/models/women/1.png" },
+  { src: "/models/women/2.png" },
+  { src: "/models/women/3.png" },
+  { src: "/models/women/4.png" },
+  { src: "/models/women/5.png" },
+  { src: "/models/women/6.png" },
+  { src: "/models/women/7.png" },
+  { src: "/models/women/8.png" },
+  { src: "/models/women/9.png" },
+  { src: "/models/women/10.png" },
+  { src: "/models/women/11.png" },
+  { src: "/models/women/12.png" },
+  { src: "/models/women/13.png" },
+  { src: "/models/women/14.png" },
+  { src: "/models/women/15.png" },
+  { src: "/models/women/16.png" },
+  { src: "/models/women/17.png" },
+  { src: "/models/women/18.png" },
+  { src: "/models/women/19.png" },
+  { src: "/models/women/20.png" },
+  { src: "/models/women/21.png" },
+  { src: "/models/women/22.png" },
+  { src: "/models/women/23.png" },
+  { src: "/models/women/24.png" },
+  { src: "/models/women/25.png" },
+  { src: "/models/women/26.png" },
+  { src: "/models/women/27.png" },
+  { src: "/models/women/28.png" },
+  { src: "/models/women/29.png" },
+  { src: "/models/women/30.png" },
+  { src: "/models/women/31.png" },
+  { src: "/models/women/32.png" },
+  { src: "/models/women/33.png" },
+  { src: "/models/women/34.png" },
+  { src: "/models/women/35.png" },
+  { src: "/models/women/36.png" },
+  { src: "/models/women/37.png" },
 ];
 
 export default function VirtualFittingRoom() {
@@ -49,9 +71,9 @@ export default function VirtualFittingRoom() {
   const [selectedClothingImage, setSelectedClothingImage] = useState<
     string | null
   >(null);
-  const [resultImage, setResultImage] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [category, setCategory] = useState("upper");
+  // const [resultImage, setResultImage] = useState<string | null>(null);
+  // const [loading, setLoading] = useState(false);
+  // const [category, setCategory] = useState("upper");
   const [selectedPersonModel, setSelectedPersonModel] = useState<{
     src: string;
   } | null>(null);
@@ -80,49 +102,49 @@ export default function VirtualFittingRoom() {
     }
   };
 
-  const handleTryOn = async () => {
-    const sourceImage = selectedImage || selectedPersonModel?.src;
+  // const handleTryOn = async () => {
+  //   const sourceImage = selectedImage || selectedPersonModel?.src;
 
-    if (!sourceImage || !selectedClothingImage) {
-      alert("Please upload or select both a person photo and a clothing item.");
-      return;
-    }
+  //   if (!sourceImage || !selectedClothingImage) {
+  //     alert("Please upload or select both a person photo and a clothing item.");
+  //     return;
+  //   }
 
-    setLoading(true);
-    try {
-      const formData = new FormData();
-      formData.append(
-        "userPhoto",
-        await fetch(sourceImage).then((r) => r.blob()),
-        "user.jpg"
-      );
-      formData.append(
-        "clothingPhoto",
-        await fetch(selectedClothingImage).then((r) => r.blob()),
-        "clothing.png"
-      );
-      formData.append("category", category);
+  //   setLoading(true);
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append(
+  //       "userPhoto",
+  //       await fetch(sourceImage).then((r) => r.blob()),
+  //       "user.jpg"
+  //     );
+  //     formData.append(
+  //       "clothingPhoto",
+  //       await fetch(selectedClothingImage).then((r) => r.blob()),
+  //       "clothing.png"
+  //     );
+  //     formData.append("category", category);
 
-      const response = await fetch("http://localhost:8000/api/try-on", {
-        method: "POST",
-        body: formData,
-      });
+  //     const response = await fetch("http://localhost:8000/api/try-on", {
+  //       method: "POST",
+  //       body: formData,
+  //     });
 
-      const result = await response.json();
-      if (result.status === "success") {
-        const resultResponse = await fetch(
-          `http://localhost:8000/api/result/${result.result_id}`
-        );
-        const resultData = await resultResponse.json();
-        setResultImage(`data:image/png;base64,${resultData.resultPhoto}`);
-      }
-    } catch (error) {
-      console.error("Try-on error:", error);
-      alert("Error processing try-on");
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     const result = await response.json();
+  //     if (result.status === "success") {
+  //       const resultResponse = await fetch(
+  //         `http://localhost:8000/api/result/${result.result_id}`
+  //       );
+  //       const resultData = await resultResponse.json();
+  //       setResultImage(`data:image/png;base64,${resultData.resultPhoto}`);
+  //     }
+  //   } catch (error) {
+  //     console.error("Try-on error:", error);
+  //     alert("Error processing try-on");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const currentModels = activeGender === "men" ? menModels : womenModels;
   const totalPages = Math.ceil(currentModels.length / MODELS_PER_PAGE);
@@ -252,31 +274,41 @@ export default function VirtualFittingRoom() {
         </div>
         <ArrowRightCircle />
         {/* Upload Clothing Photo Section */}
-        <div className="relative flex justify-center items-center w-[300px] h-[400px] rounded-3xl shadow-xl border-2 border-[#171717] dark:border-white p-1">
-          {selectedClothingImage ? (
-            <Image
-              src={selectedClothingImage}
-              alt="Uploaded Image"
-              layout="fill"
-              objectFit="cover"
-              className="rounded-3xl"
-            />
-          ) : (
-            <div className="flex flex-col justify-center items-center gap-4">
-              <Upload />
-              <p className="font-bold text-md">Upload Your Clothing Photo</p>
-              <input
-                type="file"
-                accept="image/*"
-                className="absolute w-full h-full opacity-0 cursor-pointer"
-                onChange={handleClothingImageChange}
-              />
-            </div>
-          )}
-        </div>
         <div className="flex flex-col justify-center items-center gap-8">
-          {/* 🔥 Dropdown Category Selector */}
-          <select
+          <div className="relative flex justify-center items-center w-[300px] h-[400px] rounded-3xl shadow-xl border-2 border-[#171717] dark:border-white p-1">
+            {selectedClothingImage ? (
+              <Image
+                src={selectedClothingImage}
+                alt="Uploaded Image"
+                layout="fill"
+                objectFit="cover"
+                className="rounded-3xl"
+              />
+            ) : (
+              <div className="flex flex-col justify-center items-center gap-4">
+                <Upload />
+                <p className="font-bold text-md">Upload Your Clothing Photo</p>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="absolute w-full h-full opacity-0 cursor-pointer"
+                  onChange={handleClothingImageChange}
+                />
+              </div>
+            )}
+          </div>
+          <div className="flex flex-row justify-center items-center gap-16">
+            <Link
+              className="flex flex-row justify-center items-center font-medium text-md bg-[#171717] dark:bg-white text-white dark:text-[#171717] transition-colors duration-200 gap-1 p-4 rounded-xl shadow-2xl hover:scale-105 pl-8 pr-8"
+              href={"/clothes"}
+            >
+              Choose cloth photo from Clothes
+            </Link>
+          </div>
+        </div>
+        {/* <div className="flex flex-col justify-center items-center gap-8"> */}
+        {/* 🔥 Dropdown Category Selector */}
+        {/* <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             className="border-2 border-[#171717] dark:border-white rounded-lg p-2 text-md font-bold"
@@ -293,9 +325,9 @@ export default function VirtualFittingRoom() {
           >
             {loading ? "Processing..." : "Try On"}
           </button>
-        </div>
+        </div> */}
         {/* Result Photo Section */}
-        <div className="relative flex justify-center items-center w-[300px] h-[400px] rounded-3xl shadow-xl border-2 border-[#171717] dark:border-white p-1">
+        {/* <div className="relative flex justify-center items-center w-[300px] h-[400px] rounded-3xl shadow-xl border-2 border-[#171717] dark:border-white p-1">
           {resultImage ? (
             <Image
               src={resultImage}
@@ -309,7 +341,7 @@ export default function VirtualFittingRoom() {
               <p className="font-bold text-md">Result Photo</p>
             </div>
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   );

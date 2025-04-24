@@ -1,5 +1,5 @@
-import Github from "@/public/social-media-icons/Github";
-import LinkedIn from "@/public/social-media-icons/LinkedIn";
+import Github from "@/public/icons/social-media-icons/Github";
+import LinkedIn from "@/public/icons/social-media-icons/LinkedIn";
 import Image from "next/image";
 import Link from "next/link";
 

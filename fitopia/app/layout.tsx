@@ -71,12 +71,6 @@ export default function RootLayout({
                 </Link>
                 <Link
                   className="font-semibold text-lg transition-transform duration-200 hover:scale-105"
-                  href={"/"}
-                >
-                  Pricing
-                </Link>
-                <Link
-                  className="font-semibold text-lg transition-transform duration-200 hover:scale-105"
                   href={"/about"}
                 >
                   About
@@ -101,12 +95,6 @@ export default function RootLayout({
                   href={"/stores"}
                 >
                   Stores
-                </Link>
-                <Link
-                  className="font-normal text-sm hover:underline hover:underline-offset-4 transition-colors duration-200"
-                  href={"/"}
-                >
-                  Pricing
                 </Link>
                 <Link
                   className="font-normal text-sm hover:underline hover:underline-offset-4 transition-colors duration-200"

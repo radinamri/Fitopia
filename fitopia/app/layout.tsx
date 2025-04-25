@@ -38,7 +38,7 @@ export default function RootLayout({
       >
         <header>
           <div className="flex flex-col w-full justify-center items-center">
-            <div className="flex flex-row w-[85%] h-auto justify-between items-center pt-10 pb-8">
+            <div className="flex flex-row w-[85%] h-auto justify-between items-center pt-10 pb-11">
               <div className="flex flex-row justify-center items-center gap-4">
                 <Link href={"/"}>
                   <Image

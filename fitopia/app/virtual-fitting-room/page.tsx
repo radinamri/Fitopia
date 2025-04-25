@@ -2,7 +2,6 @@
 import { useState } from "react";
 import Upload from "@/public/icons/Upload";
 import Image from "next/image";
-import ArrowRightCircle from "@/public/icons/ArrowRightCircle";
 import XIcon from "@/public/icons/XIcon";
 import Link from "next/link";
 
@@ -154,11 +153,10 @@ export default function VirtualFittingRoom() {
   );
 
   return (
-    <div className="flex flex-col w-full min-h-screen justify-center items-center gap-16 font-[family-name:var(--font-geist-sans)]">
-      {/* <div className="flex flex-col w-[85%] h-auto justify-center items-center bg-white rounded-4xl shadow-xl p-16 gap-8"> */}
-      <div className="flex flex-row justify-between items-center gap-8">
-        {/* Model Photo Section */}
-        <div className="flex flex-col justify-center items-center gap-4">
+    <div className="flex flex-col w-full min-h-screen justify-center items-center gap-2 font-[family-name:var(--font-geist-sans)]">
+      <div className="flex flex-col w-[50%] h-auto justify-center items-center">
+        <div className="flex flex-row w-full justify-between items-center">
+          {/* Model Photo Section */}
           <div className="relative flex justify-center items-center w-[300px] h-[400px] rounded-3xl shadow-xl border-2 border-[#171717] dark:border-white">
             {selectedImage || selectedPersonModel ? (
               <>
@@ -204,111 +202,120 @@ export default function VirtualFittingRoom() {
               </div>
             )}
           </div>
-          {/* Gender Selection */}
-          <div className="flex flex-row justify-center items-center gap-8">
-            <div
-              className={`font-medium text-md cursor-pointer transition-colors duration-200 ${
-                activeGender === "men"
-                  ? "underline underline-offset-4 text-[#171717] dark:text-white"
-                  : "text-gray-500"
-              }`}
-              onClick={() => {
-                setActiveGender("men");
-                setCurrentPage(1);
-              }}
-            >
-              Men
-            </div>
-            <div
-              className={`font-medium text-md cursor-pointer transition-colors duration-200 ${
-                activeGender === "women"
-                  ? "underline underline-offset-4 text-[#171717] dark:text-white"
-                  : "text-gray-500"
-              }`}
-              onClick={() => {
-                setActiveGender("women");
-                setCurrentPage(1);
-              }}
-            >
-              Women
-            </div>
-          </div>
-          {/* Person Model Selector */}
-          <div className="grid grid-cols-4 gap-2">
-            {paginatedModels.map((model, idx) => (
-              <div
-                key={idx}
-                onClick={() => handlePersonModelClick(model)}
-                className={`w-[70px] h-[91px] border-2 rounded-xl cursor-pointer overflow-hidden transition-transform duration-200 hover:scale-105 ${
-                  selectedPersonModel?.src === model.src
-                    ? "border-[#171717] dark:border-white"
-                    : "border-gray-300"
-                }`}
-              >
+          {/* Upload Clothing Photo Section */}
+          <div className="flex flex-col justify-center items-center gap-8">
+            <div className="relative flex justify-center items-center w-[300px] h-[400px] rounded-3xl shadow-xl border-2 border-[#171717] dark:border-white p-1">
+              {selectedClothingImage ? (
                 <Image
-                  src={model.src}
-                  alt={`Model ${idx + 1}`}
-                  width={70}
-                  height={91}
+                  src={selectedClothingImage}
+                  alt="Uploaded Image"
+                  layout="fill"
                   objectFit="cover"
+                  className="rounded-3xl"
                 />
-              </div>
-            ))}
-          </div>
-          {/* Pagination Controls */}
-          <div className="flex justify-center items-center gap-2 mt-2">
-            {[...Array(totalPages)].map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentPage(i + 1)}
-                className={`text-sm font-medium px-2 py-1 rounded-md border-1 ${
-                  currentPage === i + 1
-                    ? "bg-[#171717] text-white dark:bg-white dark:text-[#171717]"
-                    : "text-[#171717] border-[#171717] dark:text-white dark:border-white"
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
+              ) : (
+                <div className="flex flex-col justify-center items-center gap-4">
+                  <Upload />
+                  <p className="font-bold text-md">
+                    Upload Your Clothing Photo
+                  </p>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="absolute w-full h-full opacity-0 cursor-pointer"
+                    onChange={handleClothingImageChange}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         </div>
-        <ArrowRightCircle />
-        {/* Upload Clothing Photo Section */}
-        <div className="flex flex-col justify-center items-center gap-8">
-          <div className="relative flex justify-center items-center w-[300px] h-[400px] rounded-3xl shadow-xl border-2 border-[#171717] dark:border-white p-1">
-            {selectedClothingImage ? (
-              <Image
-                src={selectedClothingImage}
-                alt="Uploaded Image"
-                layout="fill"
-                objectFit="cover"
-                className="rounded-3xl"
-              />
-            ) : (
-              <div className="flex flex-col justify-center items-center gap-4">
-                <Upload />
-                <p className="font-bold text-md">Upload Your Clothing Photo</p>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="absolute w-full h-full opacity-0 cursor-pointer"
-                  onChange={handleClothingImageChange}
-                />
+      </div>
+      <div className="flex flex-col w-[51%] h-auto justify-center items-center">
+        <div className="flex flex-row w-full justify-between items-start">
+          <div className="flex flex-col justify-center items-center gap-4">
+            {/* Gender Selection */}
+            <div className="flex flex-row justify-center items-center gap-8">
+              <div
+                className={`font-medium text-md cursor-pointer transition-colors duration-200 ${
+                  activeGender === "men"
+                    ? "underline underline-offset-4 text-[#171717] dark:text-white"
+                    : "text-gray-500"
+                }`}
+                onClick={() => {
+                  setActiveGender("men");
+                  setCurrentPage(1);
+                }}
+              >
+                Men
               </div>
-            )}
+              <div
+                className={`font-medium text-md cursor-pointer transition-colors duration-200 ${
+                  activeGender === "women"
+                    ? "underline underline-offset-4 text-[#171717] dark:text-white"
+                    : "text-gray-500"
+                }`}
+                onClick={() => {
+                  setActiveGender("women");
+                  setCurrentPage(1);
+                }}
+              >
+                Women
+              </div>
+            </div>
+            {/* Person Model Selector */}
+            <div className="grid grid-cols-4 gap-2">
+              {paginatedModels.map((model, idx) => (
+                <div
+                  key={idx}
+                  onClick={() => handlePersonModelClick(model)}
+                  className={`w-[70px] h-[91px] border-2 rounded-xl cursor-pointer overflow-hidden transition-transform duration-200 hover:scale-105 ${
+                    selectedPersonModel?.src === model.src
+                      ? "border-[#171717] dark:border-white"
+                      : "border-gray-300"
+                  }`}
+                >
+                  <Image
+                    src={model.src}
+                    alt={`Model ${idx + 1}`}
+                    width={70}
+                    height={91}
+                    objectFit="cover"
+                  />
+                </div>
+              ))}
+            </div>
+            {/* Pagination Controls */}
+            <div className="flex justify-center items-center gap-2 mt-2">
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentPage(i + 1)}
+                  className={`text-sm font-medium px-2 py-1 rounded-md border-1 ${
+                    currentPage === i + 1
+                      ? "bg-[#171717] text-white dark:bg-white dark:text-[#171717]"
+                      : "text-[#171717] border-[#171717] dark:text-white dark:border-white"
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="flex flex-row justify-center items-center gap-16">
+          <div className="flex flex-col justify-center items-center gap-4">
             <Link
-              className="flex flex-row justify-center items-center font-medium text-md bg-[#171717] dark:bg-white text-white dark:text-[#171717] transition-colors duration-200 gap-1 p-4 rounded-xl shadow-2xl hover:scale-105 pl-8 pr-8"
+              className="flex flex-row justify-center items-center font-medium text-md pr-8 hover:underline hover:underline-offset-4 duration-200"
               href={"/clothes"}
             >
               Choose cloth photo from Clothes
             </Link>
           </div>
         </div>
-        {/* <div className="flex flex-col justify-center items-center gap-8"> */}
-        {/* 🔥 Dropdown Category Selector */}
-        {/* <select
+      </div>
+
+      {/* <div className="flex flex-col justify-center items-center gap-8"> */}
+      {/* 🔥 Dropdown Category Selector */}
+      {/* <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             className="border-2 border-[#171717] dark:border-white rounded-lg p-2 text-md font-bold"
@@ -326,8 +333,8 @@ export default function VirtualFittingRoom() {
             {loading ? "Processing..." : "Try On"}
           </button>
         </div> */}
-        {/* Result Photo Section */}
-        {/* <div className="relative flex justify-center items-center w-[300px] h-[400px] rounded-3xl shadow-xl border-2 border-[#171717] dark:border-white p-1">
+      {/* Result Photo Section */}
+      {/* <div className="relative flex justify-center items-center w-[300px] h-[400px] rounded-3xl shadow-xl border-2 border-[#171717] dark:border-white p-1">
           {resultImage ? (
             <Image
               src={resultImage}
@@ -342,7 +349,6 @@ export default function VirtualFittingRoom() {
             </div>
           )}
         </div> */}
-      </div>
     </div>
   );
 }

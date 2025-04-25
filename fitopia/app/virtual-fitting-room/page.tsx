@@ -79,26 +79,77 @@ export default function VirtualFittingRoom() {
   } | null>(null);
   const [activeGender, setActiveGender] = useState<"men" | "women">("men");
   const [currentPage, setCurrentPage] = useState(1);
-  const searchParams = useSearchParams(); // Initialize useSearchParams
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     const clothingSrcFromQuery = searchParams.get("clothingSrc");
     if (clothingSrcFromQuery) {
       setSelectedClothingImage(decodeURIComponent(clothingSrcFromQuery));
     }
+
+    // Load persisted state from localStorage on component mount
+    const persistedSelectedImage = localStorage.getItem("selectedImage");
+    if (persistedSelectedImage) {
+      setSelectedImage(persistedSelectedImage);
+    }
+
+    const persistedSelectedPersonModel = localStorage.getItem(
+      "selectedPersonModel"
+    );
+    if (persistedSelectedPersonModel) {
+      setSelectedPersonModel(JSON.parse(persistedSelectedPersonModel));
+    }
+
+    const persistedActiveGender = localStorage.getItem("activeGender");
+    if (persistedActiveGender) {
+      setActiveGender(persistedActiveGender as "men" | "women");
+    }
+
+    const persistedCurrentPage = localStorage.getItem("currentPage");
+    if (persistedCurrentPage) {
+      setCurrentPage(parseInt(persistedCurrentPage));
+    }
   }, [searchParams]);
+
+  useEffect(() => {
+    // Save state to localStorage whenever it changes
+    if (selectedImage) {
+      localStorage.setItem("selectedImage", selectedImage);
+      localStorage.removeItem("selectedPersonModel"); // Clear model if image is uploaded
+    } else {
+      localStorage.removeItem("selectedImage");
+    }
+
+    if (selectedPersonModel) {
+      localStorage.setItem(
+        "selectedPersonModel",
+        JSON.stringify(selectedPersonModel)
+      );
+      localStorage.removeItem("selectedImage"); // Clear image if model is selected
+    } else {
+      localStorage.removeItem("selectedPersonModel");
+    }
+
+    localStorage.setItem("activeGender", activeGender);
+    localStorage.setItem("currentPage", currentPage.toString());
+  }, [selectedImage, selectedPersonModel, activeGender, currentPage]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const imageUrl = URL.createObjectURL(event.target.files[0]);
       setSelectedImage(imageUrl);
-      setSelectedPersonModel(null); // Clear selected model if uploading
     }
   };
 
   const handlePersonModelClick = (model: { src: string }) => {
     setSelectedPersonModel(model);
-    setSelectedImage(null); // Clear uploaded image if choosing a model
+  };
+
+  const handleClearSelection = () => {
+    setSelectedImage(null);
+    setSelectedPersonModel(null);
+    localStorage.removeItem("selectedImage");
+    localStorage.removeItem("selectedPersonModel");
   };
 
   const handleClothingImageChange = (
@@ -177,10 +228,7 @@ export default function VirtualFittingRoom() {
                   className="rounded-3xl"
                 />
                 <button
-                  onClick={() => {
-                    setSelectedImage(null);
-                    setSelectedPersonModel(null);
-                  }}
+                  onClick={handleClearSelection}
                   className="absolute top-2 right-2 bg-[#171717] p-1 rounded-full shadow-2xl hover:scale-105 transition-transform"
                 >
                   <XIcon />
@@ -200,14 +248,14 @@ export default function VirtualFittingRoom() {
                 <div className="flex flex-col justify-center items-center gap-4 z-10">
                   <Upload />
                   <p className="font-bold text-md">Upload Your Photo</p>
+                  {/* File input */}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="absolute w-full h-full opacity-0 cursor-pointer"
+                    onChange={handleImageChange}
+                  />
                 </div>
-                {/* File input */}
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="absolute w-full h-full opacity-0 cursor-pointer"
-                  onChange={handleImageChange}
-                />
               </div>
             )}
           </div>

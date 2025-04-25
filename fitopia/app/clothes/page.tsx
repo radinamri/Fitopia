@@ -1,6 +1,7 @@
 "use client";
 import Modal from "@/components/Modal";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 const clothes = [
@@ -104,7 +105,7 @@ export default function Clothes() {
     <div className="flex flex-col w-full min-h-screen justify-center items-center gap-16 font-[family-name:var(--font-geist-sans)]">
       <div className="flex flex-col w-[85%] justify-center items-center gap-8">
         {/* Grid Container for 8x8 Layout */}
-        <div className="grid grid-cols-8 gap-6 w-full">
+        <div className="grid grid-cols-8 gap-4 w-full">
           {paginatedClothes.map(({ src, name, price }, index) => (
             <div
               key={index}
@@ -125,6 +126,14 @@ export default function Clothes() {
                   {name}
                 </p>
                 <p className="text-sm font-semibold text-gray-500">{price}</p>
+                <div className="flex flex-row justify-center items-center">
+                  <Link
+                    className="flex flex-row justify-center items-center font-semibold text-sm bg-[#171717] text-white p-2 rounded-xl pl-4 pr-4 hover:scale-105"
+                    href={"/virtual-fitting-room"}
+                  >
+                    TRY ON
+                  </Link>
+                </div>
               </div>
             </div>
           ))}
@@ -169,6 +178,14 @@ export default function Clothes() {
               <p className="text-md font-semibold text-gray-500">
                 Price: {selectedClothing.price}
               </p>
+              <div className="flex flex-row justify-center items-center">
+                <Link
+                  className="flex flex-row justify-center items-center font-semibold text-sm bg-[#171717] text-white p-2 rounded-xl pl-4 pr-4 hover:scale-105"
+                  href={"/virtual-fitting-room"}
+                >
+                  TRY ON
+                </Link>
+              </div>
             </div>
           </div>
         )}

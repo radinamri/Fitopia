@@ -14,16 +14,7 @@ const ImageComparison: React.FC<ImageComparisonProps> = ({
   rightSource,
 }) => {
   return (
-    <div
-      style={{
-        width: "50%",
-        maxWidth: "600px",
-        borderWidth: 4,
-        borderRadius: 20,
-        borderColor: "white",
-        overflow: "hidden",
-      }}
-    >
+    <div className="w-[50%] max-w-[600px] border-2 border-gray-500 rounded-4xl p-1 overflow-hidden">
       <ReactCompareSlider
         itemOne={<ReactCompareSliderImage src={leftSource} alt="Left Image" />}
         itemTwo={

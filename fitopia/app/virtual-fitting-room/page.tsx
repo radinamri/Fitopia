@@ -1,9 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Upload from "@/public/icons/Upload";
 import Image from "next/image";
 import XIcon from "@/public/icons/XIcon";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 const menModels = [
   { src: "/models/men/1.png" },
@@ -78,6 +79,14 @@ export default function VirtualFittingRoom() {
   } | null>(null);
   const [activeGender, setActiveGender] = useState<"men" | "women">("men");
   const [currentPage, setCurrentPage] = useState(1);
+  const searchParams = useSearchParams(); // Initialize useSearchParams
+
+  useEffect(() => {
+    const clothingSrcFromQuery = searchParams.get("clothingSrc");
+    if (clothingSrcFromQuery) {
+      setSelectedClothingImage(decodeURIComponent(clothingSrcFromQuery));
+    }
+  }, [searchParams]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -206,13 +215,23 @@ export default function VirtualFittingRoom() {
           <div className="flex flex-col justify-center items-center gap-8">
             <div className="relative flex justify-center items-center w-[300px] h-[400px] rounded-3xl shadow-xl border-2 border-[#171717] dark:border-white p-1">
               {selectedClothingImage ? (
-                <Image
-                  src={selectedClothingImage}
-                  alt="Uploaded Image"
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-3xl"
-                />
+                <>
+                  <Image
+                    src={selectedClothingImage}
+                    alt="Uploaded Image"
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-3xl"
+                  />
+                  <button
+                    onClick={() => {
+                      setSelectedClothingImage(null);
+                    }}
+                    className="absolute top-2 right-2 bg-[#171717] p-1 rounded-full shadow-2xl hover:scale-105 transition-transform"
+                  >
+                    <XIcon />
+                  </button>
+                </>
               ) : (
                 <div className="flex flex-col justify-center items-center gap-4">
                   <Upload />

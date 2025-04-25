@@ -1,8 +1,8 @@
 "use client";
 import Modal from "@/components/Modal";
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const clothes = [
   { src: "/clothes/upper/1.png", name: "Casual Shirt", price: "$29.99" },
@@ -86,6 +86,7 @@ export default function Clothes() {
     price: string;
   } | null>(null);
   const totalPages = Math.ceil(clothes.length / ITEMS_PER_PAGE);
+  const router = useRouter();
 
   const paginatedClothes = clothes.slice(
     page * ITEMS_PER_PAGE,
@@ -99,6 +100,10 @@ export default function Clothes() {
   }) => {
     setSelectedClothing(clothing);
     setIsModalOpen(true);
+  };
+
+  const handleTryOnButtonClick = (src: string) => {
+    router.push(`/virtual-fitting-room?clothingSrc=${encodeURIComponent(src)}`);
   };
 
   return (
@@ -127,12 +132,12 @@ export default function Clothes() {
                 </p>
                 <p className="text-sm font-semibold text-gray-500">{price}</p>
                 <div className="flex flex-row justify-center items-center">
-                  <Link
+                  <button
                     className="flex flex-row justify-center items-center font-semibold text-sm bg-[#171717] text-white p-2 rounded-xl pl-4 pr-4 hover:scale-105"
-                    href={"/virtual-fitting-room"}
+                    onClick={() => handleTryOnButtonClick(src)}
                   >
                     TRY ON
-                  </Link>
+                  </button>
                 </div>
               </div>
             </div>
@@ -179,12 +184,12 @@ export default function Clothes() {
                 Price: {selectedClothing.price}
               </p>
               <div className="flex flex-row justify-center items-center">
-                <Link
+                <button
                   className="flex flex-row justify-center items-center font-semibold text-sm bg-[#171717] text-white p-2 rounded-xl pl-4 pr-4 hover:scale-105"
-                  href={"/virtual-fitting-room"}
+                  onClick={() => handleTryOnButtonClick(selectedClothing.src)}
                 >
                   TRY ON
-                </Link>
+                </button>
               </div>
             </div>
           </div>

@@ -369,13 +369,20 @@ export default function VirtualFittingRoom() {
               ))}
             </div>
           </div>
-          <div className="flex flex-col justify-center items-center gap-4">
+          <div className="flex flex-col justify-center items-center gap-4 pr-8">
             <Link
-              className="flex flex-row justify-center items-center font-medium text-md pr-8 hover:underline hover:underline-offset-4 duration-200"
+              className="flex flex-row justify-center items-center font-medium text-md hover:underline hover:underline-offset-4 duration-200"
               href={"/clothes"}
             >
               Choose cloth photo from Clothes
             </Link>
+            <button
+              className="flex flex-row justify-center items-center w-full font-semibold text-2xl bg-[#171717] dark:bg-white text-white dark:text-[#171717] rounded-xl p-4 hover:scale-105"
+              onClick={handleTryOn}
+              disabled={loading}
+            >
+              TRY ON
+            </button>
           </div>
         </div>
       </div>

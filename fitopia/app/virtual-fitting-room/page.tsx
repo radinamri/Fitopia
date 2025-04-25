@@ -70,9 +70,9 @@ export default function VirtualFittingRoom() {
   const [selectedClothingImage, setSelectedClothingImage] = useState<
     string | null
   >(null);
-  // const [resultImage, setResultImage] = useState<string | null>(null);
-  // const [loading, setLoading] = useState(false);
-  // const [category, setCategory] = useState("upper");
+  const [resultImage, setResultImage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [category, setCategory] = useState("upper");
   const [selectedPersonModel, setSelectedPersonModel] = useState<{
     src: string;
   } | null>(null);
@@ -101,49 +101,49 @@ export default function VirtualFittingRoom() {
     }
   };
 
-  // const handleTryOn = async () => {
-  //   const sourceImage = selectedImage || selectedPersonModel?.src;
+  const handleTryOn = async () => {
+    const sourceImage = selectedImage || selectedPersonModel?.src;
 
-  //   if (!sourceImage || !selectedClothingImage) {
-  //     alert("Please upload or select both a person photo and a clothing item.");
-  //     return;
-  //   }
+    if (!sourceImage || !selectedClothingImage) {
+      alert("Please upload or select both a person photo and a clothing item.");
+      return;
+    }
 
-  //   setLoading(true);
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append(
-  //       "userPhoto",
-  //       await fetch(sourceImage).then((r) => r.blob()),
-  //       "user.jpg"
-  //     );
-  //     formData.append(
-  //       "clothingPhoto",
-  //       await fetch(selectedClothingImage).then((r) => r.blob()),
-  //       "clothing.png"
-  //     );
-  //     formData.append("category", category);
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append(
+        "userPhoto",
+        await fetch(sourceImage).then((r) => r.blob()),
+        "user.jpg"
+      );
+      formData.append(
+        "clothingPhoto",
+        await fetch(selectedClothingImage).then((r) => r.blob()),
+        "clothing.png"
+      );
+      formData.append("category", category);
 
-  //     const response = await fetch("http://localhost:8000/api/try-on", {
-  //       method: "POST",
-  //       body: formData,
-  //     });
+      const response = await fetch("http://localhost:8000/api/try-on", {
+        method: "POST",
+        body: formData,
+      });
 
-  //     const result = await response.json();
-  //     if (result.status === "success") {
-  //       const resultResponse = await fetch(
-  //         `http://localhost:8000/api/result/${result.result_id}`
-  //       );
-  //       const resultData = await resultResponse.json();
-  //       setResultImage(`data:image/png;base64,${resultData.resultPhoto}`);
-  //     }
-  //   } catch (error) {
-  //     console.error("Try-on error:", error);
-  //     alert("Error processing try-on");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+      const result = await response.json();
+      if (result.status === "success") {
+        const resultResponse = await fetch(
+          `http://localhost:8000/api/result/${result.result_id}`
+        );
+        const resultData = await resultResponse.json();
+        setResultImage(`data:image/png;base64,${resultData.resultPhoto}`);
+      }
+    } catch (error) {
+      console.error("Try-on error:", error);
+      alert("Error processing try-on");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const currentModels = activeGender === "men" ? menModels : womenModels;
   const totalPages = Math.ceil(currentModels.length / MODELS_PER_PAGE);
@@ -153,7 +153,7 @@ export default function VirtualFittingRoom() {
   );
 
   return (
-    <div className="flex flex-col w-full min-h-screen justify-center items-center gap-2 font-[family-name:var(--font-geist-sans)]">
+    <div className="flex flex-col w-full min-h-screen justify-center items-center gap-4 font-[family-name:var(--font-geist-sans)]">
       <div className="flex flex-col w-[50%] h-auto justify-center items-center">
         <div className="flex flex-row w-full justify-between items-center">
           {/* Model Photo Section */}
@@ -312,43 +312,41 @@ export default function VirtualFittingRoom() {
           </div>
         </div>
       </div>
-
-      {/* <div className="flex flex-col justify-center items-center gap-8"> */}
-      {/* 🔥 Dropdown Category Selector */}
-      {/* <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="border-2 border-[#171717] dark:border-white rounded-lg p-2 text-md font-bold"
-          >
-            <option value="upper">Upper</option>
-            <option value="lower">Lower</option>
-            <option value="overall">Overall</option>
-          </select>
-          <ArrowRightCircle />
-          <button
-            onClick={handleTryOn}
-            disabled={loading}
-            className="border-2 rounded-xl p-2 font-bold text-md hover:bg-[#171717] hover:text-white dark:hover:bg-white dark:hover:text-[#171717] transition-colors"
-          >
-            {loading ? "Processing..." : "Try On"}
-          </button>
-        </div> */}
+      <div className="flex flex-col justify-center items-center gap-8">
+        {/* 🔥 Dropdown Category Selector */}
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="border-2 border-[#171717] dark:border-white rounded-lg p-2 text-md font-bold"
+        >
+          <option value="upper">Upper</option>
+          <option value="lower">Lower</option>
+          <option value="overall">Overall</option>
+        </select>
+        <button
+          onClick={handleTryOn}
+          disabled={loading}
+          className="border-2 rounded-xl p-2 font-bold text-md hover:bg-[#171717] hover:text-white dark:hover:bg-white dark:hover:text-[#171717] transition-colors"
+        >
+          {loading ? "Processing..." : "Try On"}
+        </button>
+      </div>
       {/* Result Photo Section */}
-      {/* <div className="relative flex justify-center items-center w-[300px] h-[400px] rounded-3xl shadow-xl border-2 border-[#171717] dark:border-white p-1">
-          {resultImage ? (
-            <Image
-              src={resultImage}
-              alt="Result Image"
-              layout="fill"
-              objectFit="cover"
-              className="rounded-3xl"
-            />
-          ) : (
-            <div className="flex flex-col justify-center items-center gap-8">
-              <p className="font-bold text-md">Result Photo</p>
-            </div>
-          )}
-        </div> */}
+      <div className="relative flex justify-center items-center w-[300px] h-[400px] rounded-3xl shadow-xl border-2 border-[#171717] dark:border-white p-1">
+        {resultImage ? (
+          <Image
+            src={resultImage}
+            alt="Result Image"
+            layout="fill"
+            objectFit="cover"
+            className="rounded-3xl"
+          />
+        ) : (
+          <div className="flex flex-col justify-center items-center gap-8">
+            <p className="font-bold text-md">Result Photo</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

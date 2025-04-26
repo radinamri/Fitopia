@@ -65,7 +65,7 @@ const womenModels = [
   { src: "/models/women/37.png" },
 ];
 
-export default function VirtualFittingRoom() {
+export default function Room() {
   const MODELS_PER_PAGE = 8;
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedClothingImage, setSelectedClothingImage] = useState<

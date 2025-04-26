@@ -103,7 +103,7 @@ export default function Clothes() {
   };
 
   const handleTryOnButtonClick = (src: string) => {
-    router.push(`/virtual-fitting-room?clothingSrc=${encodeURIComponent(src)}`);
+    router.push(`/room?clothingSrc=${encodeURIComponent(src)}`);
   };
 
   return (

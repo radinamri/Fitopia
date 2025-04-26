@@ -50,7 +50,7 @@ export default function Home() {
           <div className="flex flex-row justify-center items-center gap-16">
             <Link
               className="flex flex-row justify-center items-center font-medium text-md bg-[#171717] text-white transition-colors duration-200 gap-1 p-4 rounded-xl shadow-2xl hover:scale-105 pl-16 pr-16"
-              href={"/virtual-fitting-room"}
+              href={"/room"}
             >
               <Camera />
               <PersonStanding />

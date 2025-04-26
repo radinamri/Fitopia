@@ -14,11 +14,21 @@ const ImageComparison: React.FC<ImageComparisonProps> = ({
   rightSource,
 }) => {
   return (
-    <div className="w-[50%] max-w-[600px] border-2 border-gray-500 rounded-4xl p-1 overflow-hidden">
+    <div className="w-[50%] max-w-[600px] border-2 border-gray-500 rounded-4xl overflow-hidden">
       <ReactCompareSlider
-        itemOne={<ReactCompareSliderImage src={leftSource} alt="Left Image" />}
+        itemOne={
+          <ReactCompareSliderImage
+            src={leftSource}
+            alt="Left Image"
+            className="rounded-4xl"
+          />
+        }
         itemTwo={
-          <ReactCompareSliderImage src={rightSource} alt="Right Image" />
+          <ReactCompareSliderImage
+            src={rightSource}
+            alt="Right Image"
+            className="rounded-4xl"
+          />
         }
         position={50}
       />

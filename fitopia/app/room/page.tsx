@@ -5,6 +5,7 @@ import Image from "next/image";
 import XIcon from "@/public/icons/XIcon";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const menModels = [
   { src: "/models/men/1.png" },
@@ -80,6 +81,7 @@ export default function Room() {
   const [activeGender, setActiveGender] = useState<"men" | "women">("men");
   const [currentPage, setCurrentPage] = useState(1);
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   useEffect(() => {
     const clothingSrcFromQuery = searchParams.get("clothingSrc");
@@ -378,8 +380,8 @@ export default function Room() {
             </Link>
             <button
               className="flex flex-row justify-center items-center w-full font-semibold text-2xl bg-[#171717] dark:bg-white text-white dark:text-[#171717] rounded-xl p-4 hover:scale-105"
-              onClick={handleTryOn}
-              disabled={loading}
+              onClick={() => router.push("/preview")}
+              // disabled={loading}
             >
               TRY ON
             </button>

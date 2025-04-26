@@ -380,7 +380,29 @@ export default function Room() {
             </Link>
             <button
               className="flex flex-row justify-center items-center w-full font-semibold text-2xl bg-[#171717] dark:bg-white text-white dark:text-[#171717] rounded-xl p-4 hover:scale-105"
-              onClick={() => router.push("/preview")}
+              onClick={() => {
+                if (selectedPersonModel) {
+                  router.push(
+                    `/preview?image1=${encodeURIComponent(
+                      selectedPersonModel.src
+                    )}&image2=${encodeURIComponent("/models/men/3.png")}`
+                  );
+                } else if (selectedImage) {
+                  router.push(
+                    `/preview?image1=${encodeURIComponent(
+                      selectedImage
+                    )}&image2=${encodeURIComponent("/models/men/3.png")}`
+                  );
+                } else {
+                  router.push(
+                    `/preview?image1=${encodeURIComponent(
+                      "/models/men/1.png"
+                    )}&image2=${encodeURIComponent("/models/men/3.png")}`
+                  );
+                  // You might want to handle this case differently, like showing a message
+                }
+              }}
+              // onClick={() => router.push("/preview")}
               // disabled={loading}
             >
               TRY ON

@@ -2,7 +2,7 @@
 import Image from "next/image";
 import ImageComparison from "@/components/ImageComparison";
 import ArrowRepeat from "@/public/icons/ArrowRepeat";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import PersonStanding from "@/public/icons/PersonStanding";
@@ -45,6 +45,37 @@ export default function Preview() {
     }
   }, [image1Query, image2Query]);
 
+  const downloadImage = useCallback(
+    (imageUrl: string | null, filename: string) => {
+      if (imageUrl) {
+        fetch(imageUrl)
+          .then((response) => response.blob())
+          .then((blob) => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+          });
+      }
+    },
+    []
+  );
+
+  const handleSaveClick = () => {
+    if (image1) {
+      downloadImage(image1, "fitopia_model_photo.png");
+    }
+    if (image2) {
+      downloadImage(image2, "fitopia_result_photo.png");
+    } else if (image1) {
+      downloadImage(image1, "result_photo.png"); // If only one image is available
+    }
+  };
+
   return (
     <div className="flex flex-col w-full min-h-screen justify-center items-center gap-4 font-[family-name:var(--font-geist-sans)]">
       <div className="flex flex-col w-[60%] h-auto justify-center items-center">
@@ -76,7 +107,10 @@ export default function Preview() {
             height={400}
           />
           <div className="flex flex-col justify-center items-center gap-4">
-            <button className="flex flex-row justify-center items-center w-full font-medium text-md bg-[#171717] dark:bg-white text-white dark:text-[#171717] rounded-xl p-2 hover:scale-105 gap-2">
+            <button
+              className="flex flex-row justify-center items-center w-full font-medium text-md bg-[#171717] dark:bg-white text-white dark:text-[#171717] rounded-xl p-2 hover:scale-105 gap-2"
+              onClick={handleSaveClick}
+            >
               <Download />
               Save
             </button>

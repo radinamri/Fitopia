@@ -81,6 +81,8 @@ export default function Home() {
             <ImageComparison
               leftSource="/before.png"
               rightSource="/after.png"
+              width="50%"
+              height="auto"
             />
           </div>
         </div>

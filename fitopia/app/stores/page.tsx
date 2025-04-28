@@ -100,7 +100,7 @@ export default function Stores() {
   return (
     <div className="flex flex-col w-full min-h-screen justify-center items-center gap-16 font-[family-name:var(--font-geist-sans)]">
       <div className="flex flex-col w-[85%] justify-center items-center gap-8">
-        <div className="w-full flex flex-wrap justify-between items-center gap-8">
+        <div className="grid grid-cols-4 gap-8 w-full justify-center">
           {paginatedLogos.map(({ component, name, link }, index) => (
             <StoreItem
               key={index}

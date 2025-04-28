@@ -16,7 +16,7 @@ export default function StoreItem({
   onClick,
 }: StoreItemProps) {
   return (
-    <div className="w-[22%] flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center">
       <div
         className="flex flex-col justify-center items-center bg-white rounded-3xl shadow-xl p-16 gap-16 transition-transform duration-200 hover:scale-105 cursor-pointer"
         onClick={() => onClick({ component: Logo, name, link })}

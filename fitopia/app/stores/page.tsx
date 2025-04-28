@@ -20,6 +20,7 @@ import YamahaLogo from "@/public/stores/yamaha-logo";
 import YoutubeLogo from "@/public/stores/youtube-logo";
 import Link from "next/link";
 import { useState } from "react";
+import StoreItem from "@/components/StoreItem";
 
 const logos = [
   { component: AmazonLogo, name: "Amazon", link: "https://www.amazon.com" },
@@ -100,21 +101,14 @@ export default function Stores() {
     <div className="flex flex-col w-full min-h-screen justify-center items-center gap-16 font-[family-name:var(--font-geist-sans)]">
       <div className="flex flex-col w-[85%] justify-center items-center gap-8">
         <div className="w-full flex flex-wrap justify-between items-center gap-8">
-          {paginatedLogos.map(({ component: Logo, name, link }, index) => (
-            <div
+          {paginatedLogos.map(({ component, name, link }, index) => (
+            <StoreItem
               key={index}
-              className="w-[22%] flex flex-col justify-center items-center"
-            >
-              <div
-                className="flex flex-col justify-center items-center bg-white rounded-3xl shadow-xl p-16 gap-16 transition-transform duration-200 hover:scale-105"
-                onClick={() => handleLogoClick({ component: Logo, name, link })}
-              >
-                <Logo />
-                <p className="mt-4 text-xl font-bold text-[#171717] transition-all duration-200 hover:font-extrabold hover:underline hover:underline-offset-4">
-                  {name}
-                </p>
-              </div>
-            </div>
+              Logo={component}
+              name={name}
+              link={link}
+              onClick={handleLogoClick}
+            />
           ))}
         </div>
         <div className="flex gap-4 mt-8">

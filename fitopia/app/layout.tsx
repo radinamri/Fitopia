@@ -59,6 +59,12 @@ export default function RootLayout({
               <div className="flex flex-row justify-center items-center text-md gap-8">
                 <Link
                   className="font-semibold text-lg transition-transform duration-200 hover:scale-105"
+                  href={"/room"}
+                >
+                  Fitopia Room
+                </Link>
+                <Link
+                  className="font-semibold text-lg transition-transform duration-200 hover:scale-105"
                   href={"/clothes"}
                 >
                   Clothes
@@ -84,6 +90,12 @@ export default function RootLayout({
           <div className="flex flex-col w-full min-h-fit justify-center items-center pt-8 pb-8">
             <div className="flex flex-col w-[90%] min-h-fit justify-center items-center gap-8">
               <div className="flex flex-row w-full min-h-fit justify-center items-center gap-8">
+                <Link
+                  className="font-normal text-sm hover:underline hover:underline-offset-4 transition-colors duration-200"
+                  href={"/room"}
+                >
+                  Fitopia Room
+                </Link>
                 <Link
                   className="font-normal text-sm hover:underline hover:underline-offset-4 transition-colors duration-200"
                   href={"/clothes"}

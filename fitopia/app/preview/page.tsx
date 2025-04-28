@@ -9,6 +9,7 @@ import PersonStanding from "@/public/icons/PersonStanding";
 import Download from "@/public/icons/Download";
 import Share from "@/public/icons/Share";
 import Plus from "@/public/icons/Plus";
+import Modal from "@/components/Modal";
 
 export default function Preview() {
   const searchParams = useSearchParams();
@@ -24,6 +25,8 @@ export default function Preview() {
   const [image2, setImage2] = useState<string | null>(
     image2Query ? decodeURIComponent(image2Query) : null
   );
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleRepeatClick = () => {
     if (currentImage === image1 && image2) {
@@ -65,7 +68,7 @@ export default function Preview() {
     []
   );
 
-  const handleSaveClick = () => {
+  const handleDownloadClick = () => {
     if (image1) {
       downloadImage(image1, "fitopia_model_photo.png");
     }
@@ -74,6 +77,42 @@ export default function Preview() {
     } else if (image1) {
       downloadImage(image1, "result_photo.png"); // If only one image is available
     }
+  };
+
+  const handleShareClick = async () => {
+    if (image1) {
+      try {
+        const response = await fetch(image1);
+        const blob = await response.blob();
+        const file = new File([blob], "fitopia_model.png", {
+          type: blob.type,
+        });
+
+        if (navigator.share) {
+          await navigator.share({
+            files: [file],
+            title: "Check out my FITOPIA look!",
+            text: "I tried on this outfit using FITOPIA!",
+          });
+          console.log("Shared successfully");
+        } else {
+          alert("Web Share API is not supported on your browser.");
+        }
+      } catch (error) {
+        console.error("Error sharing image:", error);
+        alert("Could not share the image.");
+      }
+    } else {
+      alert("No image to share.");
+    }
+  };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -109,16 +148,22 @@ export default function Preview() {
           <div className="flex flex-col justify-center items-center gap-4">
             <button
               className="flex flex-row justify-center items-center w-full font-medium text-md bg-[#171717] dark:bg-white text-white dark:text-[#171717] rounded-xl p-2 hover:scale-105 gap-2"
-              onClick={handleSaveClick}
+              onClick={handleDownloadClick}
             >
               <Download />
-              Save
+              Download
             </button>
-            <button className="flex flex-row justify-center items-center w-full font-medium text-md bg-[#171717] dark:bg-white text-white dark:text-[#171717] rounded-xl p-2 hover:scale-105 gap-2">
+            <button
+              className="flex flex-row justify-center items-center w-full font-medium text-md bg-[#171717] dark:bg-white text-white dark:text-[#171717] rounded-xl p-2 hover:scale-105 gap-2"
+              onClick={handleShareClick}
+            >
               <Share />
               Share
             </button>
-            <button className="flex flex-row justify-center items-center w-full font-medium text-md bg-[#171717] dark:bg-white text-white dark:text-[#171717] rounded-xl p-2 hover:scale-105 gap-2">
+            <button
+              className="flex flex-row justify-center items-center w-full font-medium text-md bg-[#171717] dark:bg-white text-white dark:text-[#171717] rounded-xl p-2 hover:scale-105 gap-2"
+              onClick={handleOpenModal}
+            >
               <Plus />
               Add More Cloth
             </button>
@@ -132,6 +177,21 @@ export default function Preview() {
           </div>
         </div>
       </div>
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+        <div>
+          <h2 className="text-xl font-bold mb-4">Add More Clothes</h2>
+          <p>
+            This is where you would put the content for adding more clothes.
+          </p>
+          {/* You can add your UI elements for selecting more clothes here */}
+          <button
+            onClick={handleCloseModal}
+            className="mt-4 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded shadow"
+          >
+            Close
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }

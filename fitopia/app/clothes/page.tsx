@@ -3,6 +3,7 @@ import Modal from "@/components/Modal";
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import ClothingItem from "@/components/ClothingItem";
 
 const clothes = [
   { src: "/clothes/upper/1.png", name: "Casual Shirt", price: "$29.99" },
@@ -76,6 +77,8 @@ const clothes = [
 ];
 
 const ITEMS_PER_PAGE = 64; // 8 rows * 8 columns
+const CLOTHING_IMAGE_WIDTH = 120;
+const CLOTHING_IMAGE_HEIGHT = 120;
 
 export default function Clothes() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -112,35 +115,16 @@ export default function Clothes() {
         {/* Grid Container for 8x8 Layout */}
         <div className="grid grid-cols-8 gap-4 w-full">
           {paginatedClothes.map(({ src, name, price }, index) => (
-            <div
+            <ClothingItem
               key={index}
-              className="flex flex-col justify-center items-center"
-            >
-              <div
-                className="flex flex-col justify-center items-center bg-white rounded-3xl shadow-xl p-4 gap-2 transition-transform duration-200 hover:scale-105 cursor-pointer"
-                onClick={() => handleClothingClick({ src, name, price })}
-              >
-                <Image
-                  src={src}
-                  alt={name}
-                  width={120} // Adjusted size for 8x8 grid
-                  height={120}
-                  className="rounded-lg"
-                />
-                <p className="mt-2 text-md font-bold text-[#171717] transition-all duration-200 hover:underline text-center">
-                  {name}
-                </p>
-                <p className="text-sm font-semibold text-gray-500">{price}</p>
-                <div className="flex flex-row justify-center items-center">
-                  <button
-                    className="flex flex-row justify-center items-center font-semibold text-sm bg-[#171717] text-white p-2 rounded-xl pl-4 pr-4 hover:scale-105"
-                    onClick={() => handleTryOnButtonClick(src)}
-                  >
-                    TRY ON
-                  </button>
-                </div>
-              </div>
-            </div>
+              source={src}
+              width={CLOTHING_IMAGE_WIDTH}
+              height={CLOTHING_IMAGE_HEIGHT}
+              name={name}
+              price={price}
+              onClick={handleClothingClick}
+              onTryOn={handleTryOnButtonClick}
+            />
           ))}
         </div>
 

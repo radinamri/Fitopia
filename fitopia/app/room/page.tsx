@@ -240,7 +240,7 @@ export default function Room() {
               <div className="relative flex justify-center items-center w-full h-full">
                 {/* Background Image */}
                 <Image
-                  src="/avatars/background.png"
+                  src="/room/upload-model-photo.png"
                   alt="Background"
                   layout="fill"
                   objectFit="cover"
@@ -263,7 +263,7 @@ export default function Room() {
           </div>
           {/* Upload Clothing Photo Section */}
           <div className="flex flex-col justify-center items-center gap-8">
-            <div className="relative flex justify-center items-center w-[300px] h-[400px] rounded-3xl shadow-xl border-2 border-[#171717] dark:border-white p-1">
+            <div className="relative flex justify-center items-center w-[300px] h-[400px] rounded-3xl shadow-xl border-2 border-[#171717] dark:border-white">
               {selectedClothingImage ? (
                 <>
                   <Image
@@ -283,17 +283,26 @@ export default function Room() {
                   </button>
                 </>
               ) : (
-                <div className="flex flex-col justify-center items-center gap-4">
-                  <Upload />
-                  <p className="font-bold text-md">
-                    Upload Your Clothing Photo
-                  </p>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="absolute w-full h-full opacity-0 cursor-pointer"
-                    onChange={handleClothingImageChange}
+                <div className="relative flex justify-center items-center w-full h-full">
+                  {/* Background Image */}
+                  <Image
+                    src="/room/upload-clothing-photo.png"
+                    alt="Clothing Photo Background"
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-3xl opacity-50 z-0"
                   />
+                  <div className="flex flex-col justify-center items-center gap-4 z-10">
+                    <Upload />
+                    <p className="font-bold text-md">Upload Your Clothing Photo</p>
+                    {/* File input */}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="absolute w-full h-full opacity-0 cursor-pointer"
+                      onChange={handleClothingImageChange}
+                    />
+                  </div>
                 </div>
               )}
             </div>

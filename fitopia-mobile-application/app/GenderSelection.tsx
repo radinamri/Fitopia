@@ -5,21 +5,32 @@ import { ThemedView } from "@/components/ThemedView";
 import { useState } from "react";
 import { FlatList, TouchableOpacity, useColorScheme } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  useVirtualTryOn,
+  VirtualTryOnProvider,
+} from "@/context/VirtualTryOnContext";
 
 export default function GenderSelection() {
+  return (
+    <VirtualTryOnProvider>
+      <GenderSelectionContent />
+    </VirtualTryOnProvider>
+  );
+}
+
+function GenderSelectionContent() {
   const colorScheme = useColorScheme();
   const dark = colorScheme === "dark";
+  const { gender, setGender } = useVirtualTryOn(); // Access gender and setGender from the context
 
   const genders: { name: "Male" | "Female"; Component: React.FC }[] = [
     { name: "Male", Component: Male },
     { name: "Female", Component: Female },
   ];
-  const [selectedGender, setSelectedGender] = useState<
-    "Male" | "Female" | null
-  >(null);
 
   const handleGenderSelection = (genderName: "Male" | "Female") => {
-    setSelectedGender(genderName);
+    // Update the gender in the context
+    setGender(genderName);
   };
 
   return (
@@ -47,7 +58,7 @@ export default function GenderSelection() {
           keyExtractor={(item) => item.name}
           renderItem={({ item }) => {
             const GenderComponent = item.Component;
-            const isSelected = selectedGender === item.name;
+            const isSelected = gender === item.name;
             let borderColor;
             if (isSelected) {
               borderColor = "orange";

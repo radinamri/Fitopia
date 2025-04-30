@@ -5,12 +5,10 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   useColorScheme,
-  StyleSheet,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 import { ThemedView } from "@/components/ThemedView";
-import { ThemedText } from "@/components/ThemedText";
 
 interface PhotoUploaderProps {
   onUpload: (photoUri: string) => void;
@@ -187,7 +185,7 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onUpload }) => {
                   width: "100%",
                   height: "100%",
                   overflow: "hidden",
-                  opacity: 0.5
+                  opacity: 0.5,
                 }}
                 resizeMode="cover"
               />

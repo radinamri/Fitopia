@@ -9,6 +9,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import ImagePicker from "@/components/ImagePicker";
 import { router } from "expo-router";
+import PersonStanding from "@/assets/images/icons/PersonStanding";
 
 export default function UploadModelImage() {
   return (
@@ -26,8 +27,6 @@ function UploadModelImageContent() {
 
   const handleModelImageUpload = (uri: string) => {
     setVirtualTryOnImages((prev) => ({ ...prev, modelImage: uri }));
-    console.log("Model Image URI:", uri); // You can handle the URI as needed
-    // You might want to navigate to the next step or show a preview here
   };
 
   const handleTryWithAnAvatar = () => {
@@ -56,9 +55,15 @@ function UploadModelImageContent() {
         </ThemedText>
         <ImagePicker onUpload={handleModelImageUpload} />
         <TouchableOpacity
-          style={{ marginTop: 32 }}
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            marginTop: 32,
+          }}
           onPress={handleTryWithAnAvatar}
         >
+          <PersonStanding />
           <ThemedText
             fontWeight="medium"
             textSize="lg"

@@ -1,20 +1,24 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Image,
   Alert,
   Dimensions,
   TouchableWithoutFeedback,
   useColorScheme,
+  TouchableOpacity,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 import { ThemedView } from "@/components/ThemedView";
+import { useVirtualTryOn } from "@/context/VirtualTryOnContext";
+import XCircleFill from "@/assets/images/icons/XCircleFill";
 
 interface PhotoUploaderProps {
   onUpload: (photoUri: string) => void;
 }
 
 const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onUpload }) => {
+  const { setVirtualTryOnImages } = useVirtualTryOn();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [backgroundImageUri, setBackgroundImageUri] = useState<string | null>(
     Image.resolveAssetSource(
@@ -142,6 +146,14 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onUpload }) => {
     );
   };
 
+  const handleRemoveImage = useCallback(() => {
+    setSelectedImage(null);
+    setVirtualTryOnImages((prevImages) => ({
+      ...prevImages,
+      modelImage: null,
+    }));
+  }, [setVirtualTryOnImages]);
+
   const colorScheme = useColorScheme();
   const color = colorScheme === "dark" ? "#FFFFFF" : "#000000";
   const screenWidth = Dimensions.get("window").width;
@@ -191,6 +203,14 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onUpload }) => {
               />
             )}
           </ThemedView>
+        )}
+        {selectedImage && (
+          <TouchableOpacity
+            style={{ position: "absolute", top: 10, right: 10 }}
+            onPress={handleRemoveImage}
+          >
+            <XCircleFill />
+          </TouchableOpacity>
         )}
       </ThemedView>
     </TouchableWithoutFeedback>

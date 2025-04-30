@@ -7,12 +7,17 @@ interface VirtualTryOnImages {
   resultImage?: any; // Resultant image after virtual try-on
 }
 
+// Define the gender type
+type Gender = "Male" | "Female" | null;
+
 // Define the context type, including virtual try-on images and a setter function
 interface VirtualTryOnContextType {
   virtualTryOnImages: VirtualTryOnImages;
   setVirtualTryOnImages: React.Dispatch<
     React.SetStateAction<VirtualTryOnImages>
   >; // Function to update virtual try-on images
+  gender: Gender;
+  setGender: React.Dispatch<React.SetStateAction<Gender>>; // Function to update gender
 }
 
 // Create the context with an initial undefined state
@@ -30,10 +35,13 @@ export const VirtualTryOnProvider = ({ children }: { children: ReactNode }) => {
       resultImage: null,
     });
 
+  // Initialize gender state with null
+  const [gender, setGender] = useState<Gender>(null);
+
   return (
     // Provide the virtual try-on images and setter function to all child components
     <VirtualTryOnContext.Provider
-      value={{ virtualTryOnImages, setVirtualTryOnImages }}
+      value={{ virtualTryOnImages, setVirtualTryOnImages, gender, setGender }}
     >
       {children}
     </VirtualTryOnContext.Provider>

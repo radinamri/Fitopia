@@ -10,27 +10,32 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ImagePicker from "@/components/ImagePicker";
 import { router } from "expo-router";
 import PersonStanding from "@/assets/images/icons/PersonStanding";
+import ChevronLeft from "@/assets/images/icons/ChevronLeft";
 
-export default function UploadModelImage() {
+export default function UploadClothImage() {
   return (
     <VirtualTryOnProvider>
-      <UploadModelImageContent />
+      <UploadClothImageContent />
     </VirtualTryOnProvider>
   );
 }
 
-function UploadModelImageContent() {
+function UploadClothImageContent() {
   const colorScheme = useColorScheme();
   const dark = colorScheme === "dark";
 
   const { virtualTryOnImages, setVirtualTryOnImages } = useVirtualTryOn();
 
-  const handleModelImageUpload = (uri: string) => {
-    setVirtualTryOnImages((prev) => ({ ...prev, modelImage: uri }));
+  const handleClothImageUpload = (uri: string) => {
+    setVirtualTryOnImages((prev) => ({ ...prev, clothImage: uri }));
   };
 
-  const handleTryWithAnAvatar = () => {
+  const handleBrowseCloth = () => {
     router.push({ pathname: "/GenderSelection" });
+  };
+
+  const handleBack = () => {
+    router.push({ pathname: "/" });
   };
 
   return (
@@ -41,6 +46,12 @@ function UploadModelImageContent() {
         backgroundColor: dark ? "#000000" : "#FFFFFF",
       }}
     >
+      <TouchableOpacity
+        style={{ position: "absolute", top: 40, left: 10 }}
+        onPress={handleBack}
+      >
+        <ChevronLeft />
+      </TouchableOpacity>
       <ThemedView
         style={{
           display: "flex",
@@ -51,9 +62,9 @@ function UploadModelImageContent() {
         }}
       >
         <ThemedText fontWeight="semibold" textSize="4xl">
-          Upload Your Photo
+          Upload Cloth Photo
         </ThemedText>
-        <ImagePicker onUpload={handleModelImageUpload} />
+        <ImagePicker onUpload={handleClothImageUpload} />
         <TouchableOpacity
           style={{
             display: "flex",
@@ -61,7 +72,7 @@ function UploadModelImageContent() {
             alignItems: "center",
             marginTop: 32,
           }}
-          onPress={handleTryWithAnAvatar}
+          onPress={handleBrowseCloth}
         >
           <PersonStanding />
           <ThemedText
@@ -69,7 +80,7 @@ function UploadModelImageContent() {
             textSize="lg"
             style={{ color: "orange" }}
           >
-            Try with an Avatar
+            Browse Cloth from our Clothes
           </ThemedText>
         </TouchableOpacity>
       </ThemedView>

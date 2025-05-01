@@ -59,7 +59,7 @@ function GenderSelectionContent() {
           width: "100%",
           justifyContent: "center",
           alignItems: "center",
-          gap: 32,
+          gap: 16,
         }}
       >
         <ThemedText fontWeight="semibold" textSize="4xl">
@@ -81,7 +81,7 @@ function GenderSelectionContent() {
               <TouchableOpacity
                 onPress={() => handleGenderSelection(item.name)}
                 style={{
-                  marginHorizontal: 16,
+                  marginHorizontal: 8,
                   alignItems: "center",
                   borderWidth: 4,
                   borderColor: borderColor,

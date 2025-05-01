@@ -12,7 +12,6 @@ import * as DocumentPicker from "expo-document-picker";
 import { ThemedView } from "@/components/ThemedView";
 import { useVirtualTryOn } from "@/context/VirtualTryOnContext";
 import XCircleFill from "@/assets/images/icons/XCircleFill";
-import Upload from "@/assets/images/icons/Upload";
 import ArrowUpCircleFill from "@/assets/images/icons/ArrowUpCircleFill";
 
 interface PhotoUploaderProps {

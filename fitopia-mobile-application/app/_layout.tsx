@@ -45,6 +45,7 @@ export default function RootLayout() {
             name="AvatarSelection"
             options={{ headerShown: false }}
           />
+          <Stack.Screen name="UploadCloth" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>

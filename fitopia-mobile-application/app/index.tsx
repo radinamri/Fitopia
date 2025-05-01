@@ -30,7 +30,7 @@ function UploadModelImageContent() {
   };
 
   const handleTryWithAnAvatar = () => {
-    router.push({ pathname: "/GenderSelection" });
+    router.push({ pathname: "/UploadCloth" });
   };
 
   return (
@@ -53,7 +53,10 @@ function UploadModelImageContent() {
         <ThemedText fontWeight="semibold" textSize="4xl">
           Upload Your Photo
         </ThemedText>
-        <ImagePicker onUpload={handleModelImageUpload} />
+        <ImagePicker
+          onUpload={handleModelImageUpload}
+          backgroundImageUrl={require("@/assets/images/room/upload-model-photo.png")}
+        />
         <TouchableOpacity
           style={{
             display: "flex",

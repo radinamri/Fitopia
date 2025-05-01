@@ -16,15 +16,19 @@ import ArrowUpCircleFill from "@/assets/images/icons/ArrowUpCircleFill";
 
 interface PhotoUploaderProps {
   onUpload: (photoUri: string) => void;
+  backgroundImageUrl: string;
 }
 
-const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onUpload }) => {
+const PhotoUploader: React.FC<PhotoUploaderProps> = ({
+  onUpload,
+  backgroundImageUrl,
+}) => {
   const { setVirtualTryOnImages } = useVirtualTryOn();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [backgroundImageUri, setBackgroundImageUri] = useState<string | null>(
-    Image.resolveAssetSource(
-      require("@/assets/images/room/upload-model-photo.png")
-    ).uri
+    typeof backgroundImageUrl === "string"
+      ? backgroundImageUrl
+      : Image.resolveAssetSource(backgroundImageUrl).uri
   );
 
   // Request permission for the gallery or camera

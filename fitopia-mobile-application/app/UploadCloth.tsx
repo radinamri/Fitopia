@@ -9,7 +9,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import ImagePicker from "@/components/ImagePicker";
 import { router } from "expo-router";
-import PersonStanding from "@/assets/images/icons/PersonStanding";
 import ChevronLeft from "@/assets/images/icons/ChevronLeft";
 
 export default function UploadClothImage() {
@@ -64,7 +63,10 @@ function UploadClothImageContent() {
         <ThemedText fontWeight="semibold" textSize="4xl">
           Upload Cloth Photo
         </ThemedText>
-        <ImagePicker onUpload={handleClothImageUpload} />
+        <ImagePicker
+          onUpload={handleClothImageUpload}
+          backgroundImageUrl={require("@/assets/images/room/upload-cloth-photo-2.png")}
+        />
         <TouchableOpacity
           style={{
             display: "flex",
@@ -74,7 +76,6 @@ function UploadClothImageContent() {
           }}
           onPress={handleBrowseCloth}
         >
-          <PersonStanding />
           <ThemedText
             fontWeight="medium"
             textSize="lg"

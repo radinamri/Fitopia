@@ -13,6 +13,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { useVirtualTryOn } from "@/context/VirtualTryOnContext";
 import XCircleFill from "@/assets/images/icons/XCircleFill";
 import Upload from "@/assets/images/icons/Upload";
+import ArrowUpCircleFill from "@/assets/images/icons/ArrowUpCircleFill";
 
 interface PhotoUploaderProps {
   onUpload: (photoUri: string) => void;
@@ -204,17 +205,10 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onUpload }) => {
               />
             )}
             <TouchableOpacity
-              style={{
-                backgroundColor: color,
-                position: "absolute",
-                top: 10,
-                right: 10,
-                borderRadius: "50%",
-                padding: 8,
-              }}
-              onPress={handleImagePress}
+              style={{ position: "absolute", top: 10, right: 10 }}
+              onPress={handleRemoveImage}
             >
-              <Upload />
+              <ArrowUpCircleFill />
             </TouchableOpacity>
           </ThemedView>
         )}

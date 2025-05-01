@@ -30,7 +30,7 @@ function UploadModelImageContent() {
   };
 
   const handleTryWithAnAvatar = () => {
-    router.push({ pathname: "/UploadCloth" });
+    router.push({ pathname: "/GenderSelection" });
   };
 
   return (

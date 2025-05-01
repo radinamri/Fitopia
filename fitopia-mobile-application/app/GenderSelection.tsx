@@ -2,13 +2,14 @@ import Female from "@/assets/images/genders/Female";
 import Male from "@/assets/images/genders/Male";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useState } from "react";
 import { FlatList, TouchableOpacity, useColorScheme } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   useVirtualTryOn,
   VirtualTryOnProvider,
 } from "@/context/VirtualTryOnContext";
+import ChevronLeft from "@/assets/images/icons/ChevronLeft";
+import { router } from "expo-router";
 
 export default function GenderSelection() {
   return (
@@ -31,6 +32,11 @@ function GenderSelectionContent() {
   const handleGenderSelection = (genderName: "Male" | "Female") => {
     // Update the gender in the context
     setGender(genderName);
+    router.push({ pathname: "/AvatarSelection" });
+  };
+
+  const handleBack = () => {
+    router.push({ pathname: "/" });
   };
 
   return (
@@ -41,6 +47,12 @@ function GenderSelectionContent() {
         backgroundColor: dark ? "#000000" : "#FFFFFF",
       }}
     >
+      <TouchableOpacity
+        style={{ position: "absolute", top: 40, left: 10 }}
+        onPress={handleBack}
+      >
+        <ChevronLeft />
+      </TouchableOpacity>
       <ThemedView
         style={{
           display: "flex",

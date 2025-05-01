@@ -12,6 +12,7 @@ import * as DocumentPicker from "expo-document-picker";
 import { ThemedView } from "@/components/ThemedView";
 import { useVirtualTryOn } from "@/context/VirtualTryOnContext";
 import XCircleFill from "@/assets/images/icons/XCircleFill";
+import Upload from "@/assets/images/icons/Upload";
 
 interface PhotoUploaderProps {
   onUpload: (photoUri: string) => void;
@@ -202,6 +203,19 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onUpload }) => {
                 resizeMode="cover"
               />
             )}
+            <TouchableOpacity
+              style={{
+                backgroundColor: color,
+                position: "absolute",
+                top: 10,
+                right: 10,
+                borderRadius: "50%",
+                padding: 8,
+              }}
+              onPress={handleImagePress}
+            >
+              <Upload />
+            </TouchableOpacity>
           </ThemedView>
         )}
         {selectedImage && (

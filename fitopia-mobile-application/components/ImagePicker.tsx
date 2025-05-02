@@ -160,7 +160,7 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({
   }, [setVirtualTryOnImages]);
 
   const colorScheme = useColorScheme();
-  const color = colorScheme === "dark" ? "#FFFFFF" : "#000000";
+  const dark = colorScheme === "dark";
   const screenWidth = Dimensions.get("window").width;
 
   return (
@@ -169,7 +169,7 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({
         style={{
           width: screenWidth * 0.8,
           height: screenWidth * 0.8 * 1.3,
-          borderColor: color,
+          borderColor: dark ? "#FFFFFF" : "#000000",
           borderWidth: 4,
           borderRadius: 30,
           justifyContent: "center",

@@ -12,14 +12,6 @@ import { router } from "expo-router";
 import PersonStanding from "@/assets/images/icons/PersonStanding";
 
 export default function UploadModelImage() {
-  return (
-    <VirtualTryOnProvider>
-      <UploadModelImageContent />
-    </VirtualTryOnProvider>
-  );
-}
-
-function UploadModelImageContent() {
   const colorScheme = useColorScheme();
   const dark = colorScheme === "dark";
 

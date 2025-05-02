@@ -1,8 +1,7 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useMemo } from "react";
 import {
   SafeAreaView,
   TouchableOpacity,
-  useColorScheme,
   FlatList,
   Image,
   View,
@@ -14,7 +13,10 @@ import { ThemedView } from "@/components/ThemedView";
 import { router } from "expo-router";
 import { useVirtualTryOn } from "@/context/VirtualTryOnContext";
 
-const menModels: number[] = [
+const { width } = Dimensions.get("window");
+const avatarSize = width / 3 - 16; // Adjust avatar size for 3 columns
+
+const menModels = [
   require("@/assets/images/models/men/1.png"),
   require("@/assets/images/models/men/2.png"),
   require("@/assets/images/models/men/3.png"),
@@ -33,7 +35,7 @@ const menModels: number[] = [
   require("@/assets/images/models/men/16.png"),
 ];
 
-const womenModels: number[] = [
+const womenModels = [
   require("@/assets/images/models/women/1.png"),
   require("@/assets/images/models/women/2.png"),
   require("@/assets/images/models/women/3.png"),
@@ -73,159 +75,121 @@ const womenModels: number[] = [
   require("@/assets/images/models/women/37.png"),
 ];
 
-interface RenderItemProps {
-  item: number;
-  index: number;
-}
-
 export default function AvatarSelection() {
-  const colorScheme = useColorScheme();
-  const dark = colorScheme === "dark";
   const { gender, setVirtualTryOnImages } = useVirtualTryOn();
   const [selectedAvatar, setSelectedAvatar] = useState<number | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const MODELS_PER_PAGE = 8;
-  const NUM_COLUMNS = 2;
-  const [itemWidth, setItemWidth] = useState(0);
 
+  // Memoize the avatars array to prevent unnecessary recalculations
+  const avatars = useMemo(
+    () => (gender === "Male" ? menModels : womenModels),
+    [gender]
+  );
+
+  // Reset selected avatar and modelImage when gender changes
   useEffect(() => {
-    const screenWidth = Dimensions.get("window").width;
-    // Calculate the width, accounting for padding and space-between
-    const calculatedItemWidth = (screenWidth - 32) / NUM_COLUMNS; // 32 for paddingHorizontal * 2
-    setItemWidth(calculatedItemWidth);
+    setSelectedAvatar(null); // Reset selected avatar
+    setVirtualTryOnImages((prev) => ({
+      ...prev,
+      modelImage: null, // Clear modelImage in context
+    }));
+  }, [gender, setVirtualTryOnImages]);
+
+  const handleBack = useCallback(() => {
+    router.push({ pathname: "/GenderSelection" });
   }, []);
 
-  const handleBack = () => {
-    router.push({ pathname: "/GenderSelection" });
-  };
-
-  const currentModels = gender === "Male" ? menModels : womenModels;
-  const totalPages = Math.ceil(currentModels.length / MODELS_PER_PAGE);
-  const paginatedModels = currentModels.slice(
-    (currentPage - 1) * MODELS_PER_PAGE,
-    currentPage * MODELS_PER_PAGE
-  );
-
-  const handleAvatarPress = useCallback(
-    (index: number) => {
-      const modelIndex = (currentPage - 1) * MODELS_PER_PAGE + index;
-      const selectedModelUri = currentModels[modelIndex];
-      setSelectedAvatar(modelIndex);
+  const handleAvatarSelect = useCallback(
+    (avatar: number, index: number) => {
+      setSelectedAvatar(index);
+      // Update the modelImage in the context
       setVirtualTryOnImages((prev) => ({
         ...prev,
-        modelImage: Image.resolveAssetSource(selectedModelUri).uri,
+        modelImage: avatar,
       }));
-      console.log(
-        "Selected Avatar URI:",
-        Image.resolveAssetSource(selectedModelUri).uri
-      );
+      // Optionally navigate to the next screen (e.g., clothing selection)
+      // router.push({ pathname: "/ClothingSelection" });
     },
-    [currentPage, currentModels, setVirtualTryOnImages, MODELS_PER_PAGE]
+    [setVirtualTryOnImages]
   );
 
-  const renderItem = useCallback(
-    ({ item, index }: RenderItemProps) => {
-      const itemHeight = itemWidth * 1.33; // Maintain 3:4 aspect ratio
-      return (
-        <TouchableOpacity
-          key={index}
+  const renderAvatar = useCallback(
+    ({ item, index }: { item: number; index: number }) => (
+      <TouchableOpacity
+        onPress={() => handleAvatarSelect(item, index)}
+        style={{
+          margin: 8,
+          borderWidth: selectedAvatar === index ? 2 : 0,
+          borderColor: selectedAvatar === index ? "#007AFF" : "transparent",
+          borderRadius: 8,
+        }}
+      >
+        <Image
+          source={item}
           style={{
-            width: itemWidth,
-            height: itemHeight,
-            borderRadius: 10,
-            overflow: "hidden",
-            borderWidth: 2,
-            borderColor:
-              selectedAvatar === (currentPage - 1) * MODELS_PER_PAGE + index
-                ? "orange"
-                : "transparent",
-            marginBottom: 16,
+            width: avatarSize,
+            height: avatarSize,
+            borderRadius: 8,
           }}
-          onPress={() => handleAvatarPress(index)}
-        >
-          <Image
-            source={item}
-            style={{ width: "100%", height: "100%", resizeMode: "cover" }}
-          />
-        </TouchableOpacity>
-      );
-    },
-    [handleAvatarPress, selectedAvatar, currentPage, MODELS_PER_PAGE, itemWidth]
+        />
+      </TouchableOpacity>
+    ),
+    [selectedAvatar, handleAvatarSelect]
   );
 
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        alignItems: "center",
-        backgroundColor: dark ? "#000000" : "#FFFFFF",
         paddingHorizontal: 16,
       }}
     >
-      <TouchableOpacity
-        style={{ position: "absolute", top: 40, left: 10, zIndex: 10 }}
-        onPress={handleBack}
-      >
-        <ChevronLeft />
-      </TouchableOpacity>
       <ThemedView
         style={{
-          justifyContent: "center",
-          alignItems: "center",
-          gap: 32,
-          marginTop: 80,
-          marginBottom: 20,
+          flex: 1,
+          width: "100%",
         }}
       >
-        <ThemedText fontWeight="semibold" textSize="4xl">
-          Select Your Avatar
-        </ThemedText>
+        {/* Header with Back Button and Title */}
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginVertical: 16,
+          }}
+        >
+          <TouchableOpacity onPress={handleBack} style={{ padding: 8 }}>
+            <ChevronLeft />
+          </TouchableOpacity>
+          <ThemedText
+            style={{ fontSize: 20, fontWeight: "bold", marginLeft: 8 }}
+          >
+            Select Your Avatar
+          </ThemedText>
+        </View>
+
+        {/* Gender-based Avatar List */}
+        {gender ? (
+          <View style={{ flex: 1 }}>
+            <ThemedText style={{ fontSize: 16, marginBottom: 8 }}>
+              {gender} Avatars
+            </ThemedText>
+            <FlatList
+              data={avatars}
+              renderItem={renderAvatar}
+              keyExtractor={(_, index) => index.toString()}
+              numColumns={3}
+              contentContainerStyle={{ paddingBottom: 16 }}
+              showsVerticalScrollIndicator={false}
+            />
+          </View>
+        ) : (
+          <ThemedText
+            style={{ fontSize: 16, textAlign: "center", marginTop: 20 }}
+          >
+            No gender selected. Please go back and select a gender.
+          </ThemedText>
+        )}
       </ThemedView>
-
-      {currentModels && currentModels.length > 0 ? (
-        <>
-          <FlatList
-            data={paginatedModels}
-            renderItem={renderItem}
-            keyExtractor={(item, index) => index.toString()}
-            numColumns={NUM_COLUMNS}
-            style={{ width: "100%" }}
-            columnWrapperStyle={{ justifyContent: "space-between" }}
-            contentContainerStyle={{ alignItems: "center" }}
-          />
-
-          {totalPages > 1 && (
-            <View style={{ flexDirection: "row", gap: 8, marginTop: 20 }}>
-              {[...Array(totalPages)].map((_, i) => (
-                <TouchableOpacity
-                  key={i}
-                  style={{
-                    paddingVertical: 8,
-                    paddingHorizontal: 12,
-                    borderRadius: 8,
-                    borderWidth: 1,
-                    borderColor: dark ? "#FFFFFF" : "#000000",
-                    backgroundColor:
-                      currentPage === i + 1 ? "orange" : "transparent",
-                  }}
-                  onPress={() => setCurrentPage(i + 1)}
-                >
-                  <ThemedText
-                    style={{
-                      color: dark ? "#FFFFFF" : "#000000",
-                      ...(currentPage === i + 1 && { color: "white" }),
-                    }}
-                  >
-                    {i + 1}
-                  </ThemedText>
-                </TouchableOpacity>
-              ))}
-            </View>
-          )}
-        </>
-      ) : (
-        <ThemedText>No avatars available for the selected gender.</ThemedText>
-      )}
     </SafeAreaView>
   );
 }

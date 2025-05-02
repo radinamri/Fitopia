@@ -1,28 +1,18 @@
+import React from "react";
 import Female from "@/assets/images/genders/Female";
 import Male from "@/assets/images/genders/Male";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { FlatList, TouchableOpacity, useColorScheme } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  useVirtualTryOn,
-  VirtualTryOnProvider,
-} from "@/context/VirtualTryOnContext";
+import { useVirtualTryOn } from "@/context/VirtualTryOnContext";
 import ChevronLeft from "@/assets/images/icons/ChevronLeft";
 import { router } from "expo-router";
 
 export default function GenderSelection() {
-  return (
-    <VirtualTryOnProvider>
-      <GenderSelectionContent />
-    </VirtualTryOnProvider>
-  );
-}
-
-function GenderSelectionContent() {
   const colorScheme = useColorScheme();
   const dark = colorScheme === "dark";
-  const { gender, setGender } = useVirtualTryOn(); // Access gender and setGender from the context
+  const { gender, setGender } = useVirtualTryOn();
 
   const genders: { name: "Male" | "Female"; Component: React.FC }[] = [
     { name: "Male", Component: Male },
@@ -30,7 +20,6 @@ function GenderSelectionContent() {
   ];
 
   const handleGenderSelection = (genderName: "Male" | "Female") => {
-    // Update the gender in the context
     setGender(genderName);
     router.push({ pathname: "/AvatarSelection" });
   };

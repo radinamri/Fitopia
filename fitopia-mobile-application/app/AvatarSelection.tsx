@@ -220,7 +220,7 @@ export default function AvatarSelection() {
           </ThemedView>
         </ScrollView>
         <Link
-          href={"/"}
+          href={"/UploadCloth"}
           style={{
             backgroundColor: "orange",
             padding: 4,

@@ -34,7 +34,7 @@ function UploadClothImageContent() {
   };
 
   const handleBack = () => {
-    router.push({ pathname: "/" });
+    router.push({ pathname: "/GenderSelection" });
   };
 
   return (

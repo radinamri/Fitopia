@@ -168,7 +168,7 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({
       <ThemedView
         style={{
           width: screenWidth * 0.8,
-          height: screenWidth * 0.8,
+          height: screenWidth * 0.8 * 1.3,
           borderColor: color,
           borderWidth: 4,
           borderRadius: 30,

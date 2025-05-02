@@ -57,6 +57,7 @@ function UploadClothImageContent() {
           width: "100%",
           justifyContent: "center",
           alignItems: "center",
+          marginTop: 32,
           gap: 16,
         }}
       >

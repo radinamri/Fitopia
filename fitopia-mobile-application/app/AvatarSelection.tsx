@@ -2,9 +2,9 @@ import React, { useState, useCallback, useEffect, useMemo } from "react";
 import {
   SafeAreaView,
   TouchableOpacity,
-  FlatList,
   Image,
   View,
+  FlatList,
   Dimensions,
 } from "react-native";
 import ChevronLeft from "@/assets/images/icons/ChevronLeft";
@@ -14,181 +14,177 @@ import { router } from "expo-router";
 import { useVirtualTryOn } from "@/context/VirtualTryOnContext";
 
 const { width } = Dimensions.get("window");
-const avatarSize = width / 3 - 16; // Adjust avatar size for 3 columns
-
-const menModels = [
-  require("@/assets/images/models/men/1.png"),
-  require("@/assets/images/models/men/2.png"),
-  require("@/assets/images/models/men/3.png"),
-  require("@/assets/images/models/men/4.png"),
-  require("@/assets/images/models/men/5.png"),
-  require("@/assets/images/models/men/6.png"),
-  require("@/assets/images/models/men/7.png"),
-  require("@/assets/images/models/men/8.png"),
-  require("@/assets/images/models/men/9.png"),
-  require("@/assets/images/models/men/10.png"),
-  require("@/assets/images/models/men/11.png"),
-  require("@/assets/images/models/men/12.png"),
-  require("@/assets/images/models/men/13.png"),
-  require("@/assets/images/models/men/14.png"),
-  require("@/assets/images/models/men/15.png"),
-  require("@/assets/images/models/men/16.png"),
-];
-
-const womenModels = [
-  require("@/assets/images/models/women/1.png"),
-  require("@/assets/images/models/women/2.png"),
-  require("@/assets/images/models/women/3.png"),
-  require("@/assets/images/models/women/4.png"),
-  require("@/assets/images/models/women/5.png"),
-  require("@/assets/images/models/women/6.png"),
-  require("@/assets/images/models/women/7.png"),
-  require("@/assets/images/models/women/8.png"),
-  require("@/assets/images/models/women/9.png"),
-  require("@/assets/images/models/women/10.png"),
-  require("@/assets/images/models/women/11.png"),
-  require("@/assets/images/models/women/12.png"),
-  require("@/assets/images/models/women/13.png"),
-  require("@/assets/images/models/women/14.png"),
-  require("@/assets/images/models/women/15.png"),
-  require("@/assets/images/models/women/16.png"),
-  require("@/assets/images/models/women/17.png"),
-  require("@/assets/images/models/women/18.png"),
-  require("@/assets/images/models/women/19.png"),
-  require("@/assets/images/models/women/20.png"),
-  require("@/assets/images/models/women/21.png"),
-  require("@/assets/images/models/women/22.png"),
-  require("@/assets/images/models/women/23.png"),
-  require("@/assets/images/models/women/24.png"),
-  require("@/assets/images/models/women/25.png"),
-  require("@/assets/images/models/women/26.png"),
-  require("@/assets/images/models/women/27.png"),
-  require("@/assets/images/models/women/28.png"),
-  require("@/assets/images/models/women/29.png"),
-  require("@/assets/images/models/women/30.png"),
-  require("@/assets/images/models/women/31.png"),
-  require("@/assets/images/models/women/32.png"),
-  require("@/assets/images/models/women/33.png"),
-  require("@/assets/images/models/women/34.png"),
-  require("@/assets/images/models/women/35.png"),
-  require("@/assets/images/models/women/36.png"),
-  require("@/assets/images/models/women/37.png"),
-];
+const avatarSize = width / 5; // Smaller size to fit 4 avatars in 1 row with spacing
 
 export default function AvatarSelection() {
   const { gender, setVirtualTryOnImages } = useVirtualTryOn();
   const [selectedAvatar, setSelectedAvatar] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(0);
 
-  // Memoize the avatars array to prevent unnecessary recalculations
+  const menModels = useMemo(
+    () => [
+      require("@/assets/images/models/men/1.png"),
+      require("@/assets/images/models/men/2.png"),
+      require("@/assets/images/models/men/3.png"),
+      require("@/assets/images/models/men/4.png"),
+      require("@/assets/images/models/men/5.png"),
+      require("@/assets/images/models/men/6.png"),
+      require("@/assets/images/models/men/7.png"),
+      require("@/assets/images/models/men/8.png"),
+      require("@/assets/images/models/men/9.png"),
+      require("@/assets/images/models/men/10.png"),
+      require("@/assets/images/models/men/11.png"),
+      require("@/assets/images/models/men/12.png"),
+      require("@/assets/images/models/men/13.png"),
+      require("@/assets/images/models/men/14.png"),
+      require("@/assets/images/models/men/15.png"),
+      require("@/assets/images/models/men/16.png"),
+    ],
+    []
+  );
+
+  const womenModels = useMemo(
+    () => [
+      require("@/assets/images/models/women/1.png"),
+      require("@/assets/images/models/women/2.png"),
+      require("@/assets/images/models/women/3.png"),
+      // ... add more here
+      require("@/assets/images/models/women/37.png"),
+    ],
+    []
+  );
+
   const avatars = useMemo(
     () => (gender === "Male" ? menModels : womenModels),
     [gender]
   );
 
-  // Reset selected avatar and modelImage when gender changes
+  const pageSize = 4;
+  const totalPages = Math.ceil(avatars.length / pageSize);
+
   useEffect(() => {
-    setSelectedAvatar(null); // Reset selected avatar
+    setSelectedAvatar(null);
     setVirtualTryOnImages((prev) => ({
       ...prev,
-      modelImage: null, // Clear modelImage in context
+      modelImage: null,
     }));
+    setCurrentPage(0); // Reset page on gender change
   }, [gender, setVirtualTryOnImages]);
 
-  const handleBack = useCallback(() => {
-    router.push({ pathname: "/GenderSelection" });
-  }, []);
+  const handleBack = () => router.push({ pathname: "/GenderSelection" });
 
-  const handleAvatarSelect = useCallback(
-    (avatar: number, index: number) => {
-      setSelectedAvatar(index);
-      // Update the modelImage in the context
-      setVirtualTryOnImages((prev) => ({
-        ...prev,
-        modelImage: avatar,
-      }));
-      // Optionally navigate to the next screen (e.g., clothing selection)
-      // router.push({ pathname: "/ClothingSelection" });
-    },
-    [setVirtualTryOnImages]
-  );
+  const handleAvatarSelect = (avatar: number, index: number) => {
+    setSelectedAvatar(index);
+    setVirtualTryOnImages((prev) => ({
+      ...prev,
+      modelImage: avatar,
+    }));
+  };
 
-  const renderAvatar = useCallback(
-    ({ item, index }: { item: number; index: number }) => (
-      <TouchableOpacity
-        onPress={() => handleAvatarSelect(item, index)}
-        style={{
-          margin: 8,
-          borderWidth: selectedAvatar === index ? 2 : 0,
-          borderColor: selectedAvatar === index ? "#007AFF" : "transparent",
-          borderRadius: 8,
-        }}
-      >
-        <Image
-          source={item}
-          style={{
-            width: avatarSize,
-            height: avatarSize,
-            borderRadius: 8,
-          }}
-        />
-      </TouchableOpacity>
-    ),
-    [selectedAvatar, handleAvatarSelect]
+  const handleNextPage = () => {
+    if (currentPage < totalPages - 1) setCurrentPage(currentPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 0) setCurrentPage(currentPage - 1);
+  };
+
+  const paginatedAvatars = avatars.slice(
+    currentPage * pageSize,
+    currentPage * pageSize + pageSize
   );
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        paddingHorizontal: 16,
-      }}
-    >
+    <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
+      <TouchableOpacity
+        style={{ position: "absolute", top: 40, left: 10, zIndex: 10 }}
+        onPress={handleBack}
+      >
+        <ChevronLeft />
+      </TouchableOpacity>
+
       <ThemedView
         style={{
           flex: 1,
-          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: 32,
+          gap: 16,
         }}
       >
-        {/* Header with Back Button and Title */}
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginVertical: 16,
-          }}
-        >
-          <TouchableOpacity onPress={handleBack} style={{ padding: 8 }}>
-            <ChevronLeft />
-          </TouchableOpacity>
-          <ThemedText
-            style={{ fontSize: 20, fontWeight: "bold", marginLeft: 8 }}
-          >
-            Select Your Avatar
-          </ThemedText>
+        <ThemedText fontWeight="semibold" textSize="4xl">
+          Choose Your Avatar
+        </ThemedText>
+
+        {/* Selected Avatar Display */}
+        {selectedAvatar !== null ? (
+          <Image
+            source={avatars[selectedAvatar]}
+            style={{ width: 200, height: 200, borderRadius: 16 }}
+            resizeMode="contain"
+          />
+        ) : (
+          <ThemedText>Select an avatar below</ThemedText>
+        )}
+
+        {/* Avatar Grid - Paginated */}
+        <View style={{ flexDirection: "row", gap: 16, marginTop: 24 }}>
+          {paginatedAvatars.map((item, index) => {
+            const absoluteIndex = currentPage * pageSize + index;
+            const isSelected = selectedAvatar === absoluteIndex;
+
+            return (
+              <TouchableOpacity
+                key={absoluteIndex}
+                onPress={() => handleAvatarSelect(item, absoluteIndex)}
+                style={{
+                  borderWidth: 2,
+                  borderColor: isSelected ? "#007AFF" : "transparent",
+                  borderRadius: 12,
+                  padding: 4,
+                }}
+              >
+                <Image
+                  source={item}
+                  style={{
+                    width: avatarSize,
+                    height: avatarSize,
+                    borderRadius: 8,
+                  }}
+                />
+              </TouchableOpacity>
+            );
+          })}
         </View>
 
-        {/* Gender-based Avatar List */}
-        {gender ? (
-          <View style={{ flex: 1 }}>
-            <ThemedText style={{ fontSize: 16, marginBottom: 8 }}>
-              {gender} Avatars
-            </ThemedText>
-            <FlatList
-              data={avatars}
-              renderItem={renderAvatar}
-              keyExtractor={(_, index) => index.toString()}
-              numColumns={3}
-              contentContainerStyle={{ paddingBottom: 16 }}
-              showsVerticalScrollIndicator={false}
-            />
-          </View>
-        ) : (
-          <ThemedText
-            style={{ fontSize: 16, textAlign: "center", marginTop: 20 }}
+        {/* Pagination Controls */}
+        <View style={{ flexDirection: "row", marginTop: 24, gap: 24 }}>
+          <TouchableOpacity
+            onPress={handlePrevPage}
+            disabled={currentPage === 0}
           >
-            No gender selected. Please go back and select a gender.
+            <ThemedText
+              style={{ opacity: currentPage === 0 ? 0.5 : 1 }}
+              fontWeight="medium"
+            >
+              ◀ Prev
+            </ThemedText>
+          </TouchableOpacity>
+          <ThemedText>
+            Page {currentPage + 1} / {totalPages}
           </ThemedText>
-        )}
+          <TouchableOpacity
+            onPress={handleNextPage}
+            disabled={currentPage === totalPages - 1}
+          >
+            <ThemedText
+              style={{ opacity: currentPage === totalPages - 1 ? 0.5 : 1 }}
+              fontWeight="medium"
+            >
+              Next ▶
+            </ThemedText>
+          </TouchableOpacity>
+        </View>
       </ThemedView>
     </SafeAreaView>
   );

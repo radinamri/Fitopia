@@ -51,7 +51,7 @@ export default function UploadModelImage() {
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
-            marginTop: 32,
+            gap: 2,
           }}
           onPress={handleTryWithAnAvatar}
         >
@@ -62,6 +62,23 @@ export default function UploadModelImage() {
             style={{ color: "orange" }}
           >
             Try with an Avatar
+          </ThemedText>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => router.push("/UploadCloth")}
+          style={{
+            backgroundColor: "orange",
+            padding: 8,
+            paddingStart: 16,
+            paddingEnd: 16,
+            borderRadius: 8,
+            marginTop: 16,
+            opacity: virtualTryOnImages.modelImage !== null ? 1 : 0.5,
+          }}
+          disabled={virtualTryOnImages.modelImage === null}
+        >
+          <ThemedText fontWeight="semibold" textSize="2xl">
+            Next
           </ThemedText>
         </TouchableOpacity>
       </ThemedView>

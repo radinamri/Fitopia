@@ -73,7 +73,6 @@ function UploadClothImageContent() {
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
-            marginTop: 32,
           }}
           onPress={handleBrowseCloth}
         >
@@ -83,6 +82,23 @@ function UploadClothImageContent() {
             style={{ color: "orange" }}
           >
             Browse Cloth from our Clothes
+          </ThemedText>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => router.push("/Preview")}
+          style={{
+            backgroundColor: "orange",
+            padding: 8,
+            paddingStart: 16,
+            paddingEnd: 16,
+            borderRadius: 8,
+            marginTop: 16,
+            opacity: virtualTryOnImages.clothImage !== null ? 1 : 0.5,
+          }}
+          disabled={virtualTryOnImages.clothImage === null}
+        >
+          <ThemedText fontWeight="semibold" textSize="2xl">
+            TRY ON
           </ThemedText>
         </TouchableOpacity>
       </ThemedView>

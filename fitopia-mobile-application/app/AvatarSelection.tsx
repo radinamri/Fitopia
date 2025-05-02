@@ -223,7 +223,7 @@ export default function AvatarSelection() {
           onPress={() => router.push("/UploadCloth")}
           style={{
             backgroundColor: "orange",
-            padding: 4,
+            padding: 8,
             paddingStart: 16,
             paddingEnd: 16,
             borderRadius: 8,

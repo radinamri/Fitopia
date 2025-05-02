@@ -219,8 +219,8 @@ export default function AvatarSelection() {
             )}
           </ThemedView>
         </ScrollView>
-        <Link
-          href={"/UploadCloth"}
+        <TouchableOpacity
+          onPress={() => router.push("/UploadCloth")}
           style={{
             backgroundColor: "orange",
             padding: 4,
@@ -234,7 +234,7 @@ export default function AvatarSelection() {
           <ThemedText fontWeight="semibold" textSize="2xl">
             Next
           </ThemedText>
-        </Link>
+        </TouchableOpacity>
       </ThemedView>
     </SafeAreaView>
   );

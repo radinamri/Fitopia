@@ -232,7 +232,7 @@ export default function AvatarSelection() {
           disabled={selectedAvatar === null}
         >
           <ThemedText fontWeight="semibold" textSize="2xl">
-            TRY ON
+            Next
           </ThemedText>
         </Link>
       </ThemedView>

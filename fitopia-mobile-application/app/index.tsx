@@ -2,10 +2,7 @@ import React from "react";
 import { TouchableOpacity, useColorScheme } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import {
-  VirtualTryOnProvider,
-  useVirtualTryOn,
-} from "@/context/VirtualTryOnContext";
+import { useVirtualTryOn } from "@/context/VirtualTryOnContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ImagePicker from "@/components/ImagePicker";
 import { router } from "expo-router";

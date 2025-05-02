@@ -1,16 +1,16 @@
-import React, { useState, useCallback, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   SafeAreaView,
   TouchableOpacity,
   Image,
-  View,
   Dimensions,
+  ScrollView,
   useColorScheme,
 } from "react-native";
 import ChevronLeft from "@/assets/images/icons/ChevronLeft";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { useVirtualTryOn } from "@/context/VirtualTryOnContext";
 
 const menModels = [
@@ -82,21 +82,14 @@ export default function AvatarSelection() {
 
   const { gender, setVirtualTryOnImages } = useVirtualTryOn();
   const [selectedAvatar, setSelectedAvatar] = useState<number | null>(null);
-  const [currentPage, setCurrentPage] = useState(0);
 
-  // Memoize the avatars array to prevent unnecessary recalculations
   const avatars = useMemo(
     () => (gender === "Male" ? menModels : womenModels),
     [gender]
   );
 
-  const pageSize = 4;
-  const totalPages = Math.ceil(avatars.length / pageSize);
-
-  // Reset selected avatar and modelImage when gender changes
   useEffect(() => {
     setSelectedAvatar(null);
-    setCurrentPage(0);
     setVirtualTryOnImages((prev) => ({ ...prev, modelImage: null }));
   }, [gender, setVirtualTryOnImages]);
 
@@ -105,19 +98,12 @@ export default function AvatarSelection() {
   const handleAvatarSelect = useCallback(
     (avatar: number, index: number) => {
       setSelectedAvatar(index);
-      // Update the modelImage in the context
       setVirtualTryOnImages((prev) => ({
         ...prev,
         modelImage: avatar,
       }));
-      //   router.push({ pathname: "/UploadCloth" });
     },
     [setVirtualTryOnImages]
-  );
-
-  const paginatedAvatars = avatars.slice(
-    currentPage * pageSize,
-    (currentPage + 1) * pageSize
   );
 
   return (
@@ -134,12 +120,14 @@ export default function AvatarSelection() {
       >
         <ChevronLeft />
       </TouchableOpacity>
+
       <ThemedView
         style={{
           display: "flex",
           width: "100%",
           justifyContent: "center",
           alignItems: "center",
+          marginTop: 32,
           gap: 16,
         }}
       >
@@ -169,83 +157,84 @@ export default function AvatarSelection() {
           )}
         </ThemedView>
 
-        {/* Avatar Grid */}
-        <View
-          style={{
-            maxWidth: "90%",
-            flexDirection: "row",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            gap: 8,
+        {/* Horizontal Scroll Avatar Grid - Two Rows */}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingHorizontal: 16,
           }}
         >
-          {paginatedAvatars.map((item, index) => {
-            const absIndex = currentPage * pageSize + index;
-            const isSelected = absIndex === selectedAvatar;
-            return (
-              <TouchableOpacity
-                key={absIndex}
-                onPress={() => handleAvatarSelect(item, absIndex)}
-                style={{
-                  width: avatarImageWidth,
-                  height: avatarImageHeight,
-                  borderRadius: 10,
-                  overflow: "hidden",
-                  borderWidth: isSelected ? 0 : 0,
-                  borderColor: isSelected ? "orange" : "transparent",
-                }}
-              >
-                <Image
-                  source={item}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    borderRadius: 10,
-                  }}
-                  resizeMode="cover"
-                />
-              </TouchableOpacity>
-            );
-          })}
-        </View>
+          <ThemedView style={{ flexDirection: "row" }}>
+            {Array.from({ length: Math.ceil(avatars.length / 2) }).map(
+              (_, columnIndex) => {
+                const firstIndex = columnIndex * 2;
+                const secondIndex = firstIndex + 1;
 
-        {/* Pagination */}
-        <ThemedView
+                return (
+                  <ThemedView
+                    key={columnIndex}
+                    style={{
+                      marginRight: 10,
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                      height: avatarImageHeight * 2 + 10,
+                    }}
+                  >
+                    {[firstIndex, secondIndex].map((index) => {
+                      if (index >= avatars.length) return null;
+
+                      const isSelected = index === selectedAvatar;
+
+                      return (
+                        <TouchableOpacity
+                          key={index}
+                          onPress={() =>
+                            handleAvatarSelect(avatars[index], index)
+                          }
+                          style={{
+                            width: avatarImageWidth,
+                            height: avatarImageHeight,
+                            marginBottom: 8,
+                            borderRadius: 12,
+                            overflow: "hidden",
+                            borderWidth: isSelected ? 3 : 0,
+                            borderColor: isSelected ? "orange" : "transparent",
+                          }}
+                        >
+                          <Image
+                            source={avatars[index]}
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                            }}
+                            resizeMode="cover"
+                          />
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </ThemedView>
+                );
+              }
+            )}
+          </ThemedView>
+        </ScrollView>
+        <Link
+          href={"/"}
           style={{
-            flexDirection: "row",
-            gap: 32,
-            alignItems: "center",
+            backgroundColor: "orange",
+            padding: 4,
+            paddingStart: 16,
+            paddingEnd: 16,
+            borderRadius: 8,
+            opacity: selectedAvatar !== null ? 1 : 0.5,
           }}
+          disabled={selectedAvatar === null}
         >
-          <TouchableOpacity
-            onPress={() => setCurrentPage((p) => Math.max(p - 1, 0))}
-            disabled={currentPage === 0}
-          >
-            <ThemedText
-              style={{ color: "orange", opacity: currentPage === 0 ? 0.5 : 1 }}
-            >
-              ◀ Prev
-            </ThemedText>
-          </TouchableOpacity>
-          <ThemedText>
-            Page {currentPage + 1}/{totalPages}
+          <ThemedText fontWeight="semibold" textSize="2xl">
+            TRY ON
           </ThemedText>
-          <TouchableOpacity
-            onPress={() =>
-              setCurrentPage((p) => Math.min(p + 1, totalPages - 1))
-            }
-            disabled={currentPage === totalPages - 1}
-          >
-            <ThemedText
-              style={{
-                color: "orange",
-                opacity: currentPage === totalPages - 1 ? 0.5 : 1,
-              }}
-            >
-              Next ▶
-            </ThemedText>
-          </TouchableOpacity>
-        </ThemedView>
+        </Link>
       </ThemedView>
     </SafeAreaView>
   );

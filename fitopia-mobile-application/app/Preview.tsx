@@ -6,6 +6,7 @@ import Share from "@/assets/images/icons/Share";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useVirtualTryOn } from "@/context/VirtualTryOnContext";
+import { router } from "expo-router";
 import {
   Dimensions,
   SafeAreaView,
@@ -45,7 +46,7 @@ export default function Preview() {
             borderRadius: 30,
             overflow: "hidden",
             borderWidth: 4,
-            borderColor: dark ? "#FFFFFF" : "#000000",
+            borderColor: dark ? "orange" : "orange",
             justifyContent: "center",
             alignItems: "center",
           }}
@@ -99,7 +100,7 @@ export default function Preview() {
             <ThemedText
               fontWeight="semibold"
               textSize="md"
-              style={{ color: dark ? "orange" : "#000000" }}
+              style={{ color: dark ? "orange" : "orange" }}
             >
               Download
             </ThemedText>
@@ -120,7 +121,7 @@ export default function Preview() {
             <ThemedText
               fontWeight="semibold"
               textSize="md"
-              style={{ color: dark ? "orange" : "#000000" }}
+              style={{ color: dark ? "orange" : "orange" }}
             >
               Share
             </ThemedText>
@@ -142,7 +143,7 @@ export default function Preview() {
           <ThemedText
             fontWeight="semibold"
             textSize="md"
-            style={{ color: dark ? "orange" : "#000000" }}
+            style={{ color: dark ? "orange" : "orange" }}
           >
             Add More Cloth
           </ThemedText>
@@ -153,6 +154,7 @@ export default function Preview() {
             alignItems: "center",
             gap: 2,
           }}
+          onPress={() => router.push("/")}
         >
           <PersonStanding />
           <ThemedText

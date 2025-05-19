@@ -5,7 +5,7 @@ import { SafeAreaView, useColorScheme, Image, FlatList } from "react-native";
 
 type ClothesItem = {
   id: number;
-  src: any; // or ImageSourcePropType if you want to be strict
+  src: any;
   name: string;
   price: string;
   category: string;
@@ -138,7 +138,7 @@ export default function Clothes() {
   const dark = colorScheme === "dark";
 
   const renderItem = ({ item }: { item: (typeof clothesData)[0] }) => (
-    <ThemedView style={{ flex: 1, margin: 8 }}>
+    <ThemedView style={{ alignItems: "flex-start" }}>
       <Image
         source={item.src}
         style={{
@@ -148,10 +148,10 @@ export default function Clothes() {
           resizeMode: "cover",
         }}
       />
-      <ThemedText fontWeight="medium" textSize="sm" style={{ marginTop: 8 }}>
+      <ThemedText fontWeight="semibold" textSize="sm" style={{ marginTop: 8 }}>
         {item.name}
       </ThemedText>
-      <ThemedText fontWeight="medium" textSize="sm">
+      <ThemedText fontWeight="medium" textSize="sm" style={{ color: "orange" }}>
         {item.price}
       </ThemedText>
     </ThemedView>
@@ -198,18 +198,27 @@ export default function Clothes() {
         </ThemedView>
       </ThemedView>
 
-      <FlatList
-        data={clothesData}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderItem}
-        numColumns={2}
-        columnWrapperStyle={{
-          justifyContent: "space-between",
-          paddingHorizontal: 8,
+      <ThemedView
+        style={{
+          width: "100%",
+          alignItems: "center",
+          marginTop: 32,
         }}
-        contentContainerStyle={{ paddingVertical: 16 }}
-        showsVerticalScrollIndicator={false}
-      />
+      >
+        <FlatList
+          data={clothesData}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={renderItem}
+          numColumns={2}
+          style={{ width: "90%" }}
+          columnWrapperStyle={{
+            justifyContent: "space-between",
+            marginBottom: 16,
+          }}
+          contentContainerStyle={{ paddingBottom: 32 }}
+          showsVerticalScrollIndicator={false}
+        />
+      </ThemedView>
     </SafeAreaView>
   );
 }

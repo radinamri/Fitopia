@@ -1,7 +1,14 @@
 import Search from "@/assets/images/icons/Search";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { SafeAreaView, useColorScheme, Image, FlatList } from "react-native";
+import { useState } from "react";
+import {
+  SafeAreaView,
+  useColorScheme,
+  Image,
+  FlatList,
+  TextInput,
+} from "react-native";
 
 type ClothesItem = {
   id: number;
@@ -137,6 +144,8 @@ export default function Clothes() {
   const colorScheme = useColorScheme();
   const dark = colorScheme === "dark";
 
+  const [searchText, setSearchText] = useState("");
+
   const renderItem = ({ item }: { item: (typeof clothesData)[0] }) => (
     <ThemedView style={{ alignItems: "flex-start" }}>
       <Image
@@ -192,12 +201,20 @@ export default function Clothes() {
           }}
         >
           <Search />
-          <ThemedText fontWeight="medium" textSize="md">
-            Search
-          </ThemedText>
+          <TextInput
+            placeholder="Search"
+            placeholderTextColor={dark ? "#FFFFFF" : "#000000"}
+            value={searchText}
+            onChangeText={setSearchText}
+            style={{
+              flex: 1,
+              color: dark ? "#FFFFFF" : "#000000",
+              fontWeight: "medium",
+              fontSize: 16,
+            }}
+          />
         </ThemedView>
       </ThemedView>
-
       <ThemedView
         style={{
           width: "100%",
@@ -215,7 +232,7 @@ export default function Clothes() {
             justifyContent: "space-between",
             marginBottom: 16,
           }}
-          contentContainerStyle={{ paddingBottom: 32 }}
+          contentContainerStyle={{ paddingBottom: 64 }}
           showsVerticalScrollIndicator={false}
         />
       </ThemedView>

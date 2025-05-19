@@ -223,7 +223,9 @@ export default function Clothes() {
         }}
       >
         <FlatList
-          data={clothesData}
+          data={clothesData.filter((item) =>
+            item.name.toLowerCase().includes(searchText.toLowerCase())
+          )}
           keyExtractor={(item) => item.id.toString()}
           renderItem={renderItem}
           numColumns={2}

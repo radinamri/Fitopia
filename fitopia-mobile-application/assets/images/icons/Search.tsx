@@ -4,7 +4,7 @@ import { useColorScheme } from "react-native";
 
 export default function Search() {
   const colorScheme = useColorScheme();
-  const fillColor = colorScheme === "dark" ? "#000000" : "#FFFFFF";
+  const fillColor = colorScheme === "dark" ? "#FFFFFF" : "#000000";
 
   return (
     <Svg width="16" height="16" fill={fillColor} viewBox="0 0 16 16">

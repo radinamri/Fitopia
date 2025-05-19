@@ -1,16 +1,167 @@
+import Search from "@/assets/images/icons/Search";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { SafeAreaView, useColorScheme } from "react-native";
+import { SafeAreaView, useColorScheme, Image, FlatList } from "react-native";
+
+type ClothesItem = {
+  id: number;
+  src: any; // or ImageSourcePropType if you want to be strict
+  name: string;
+  price: string;
+  category: string;
+};
+
+const clothesData: ClothesItem[] = [
+  {
+    id: 1,
+    src: require("@/assets/images/clothes/upper/1.png"),
+    name: "Casual Shirt",
+    price: "$29.99",
+    category: "Upper",
+  },
+  {
+    id: 2,
+    src: require("@/assets/images/clothes/upper/2.png"),
+    name: "Formal Shirt",
+    price: "$34.99",
+    category: "Upper",
+  },
+  {
+    id: 3,
+    src: require("@/assets/images/clothes/upper/3.png"),
+    name: "Leather Jacket",
+    price: "$99.99",
+    category: "Upper",
+  },
+  {
+    id: 4,
+    src: require("@/assets/images/clothes/upper/4.png"),
+    name: "Winter Jacket",
+    price: "$120.00",
+    category: "Upper",
+  },
+  {
+    id: 5,
+    src: require("@/assets/images/clothes/upper/5.png"),
+    name: "Denim Jeans",
+    price: "$45.50",
+    category: "Upper",
+  },
+  {
+    id: 6,
+    src: require("@/assets/images/clothes/upper/6.png"),
+    name: "Chino Pants",
+    price: "$40.00",
+    category: "Upper",
+  },
+  {
+    id: 7,
+    src: require("@/assets/images/clothes/upper/7.png"),
+    name: "Sneakers",
+    price: "$60.00",
+    category: "Upper",
+  },
+  {
+    id: 8,
+    src: require("@/assets/images/clothes/upper/8.png"),
+    name: "Formal Shoes",
+    price: "$75.00",
+    category: "Upper",
+  },
+  {
+    id: 9,
+    src: require("@/assets/images/clothes/lower/1.png"),
+    name: "Summer Dress",
+    price: "$55.99",
+    category: "Lower",
+  },
+  {
+    id: 10,
+    src: require("@/assets/images/clothes/lower/2.png"),
+    name: "Evening Gown",
+    price: "$140.00",
+    category: "Lower",
+  },
+  {
+    id: 11,
+    src: require("@/assets/images/clothes/lower/3.png"),
+    name: "Casual Hoodie",
+    price: "$39.99",
+    category: "Lower",
+  },
+  {
+    id: 12,
+    src: require("@/assets/images/clothes/lower/4.png"),
+    name: "Zipped Hoodie",
+    price: "$49.99",
+    category: "Lower",
+  },
+  {
+    id: 13,
+    src: require("@/assets/images/clothes/lower/5.png"),
+    name: "Mini Skirt",
+    price: "$25.99",
+    category: "Lower",
+  },
+  {
+    id: 14,
+    src: require("@/assets/images/clothes/overall/1.png"),
+    name: "Maxi Skirt",
+    price: "$30.99",
+    category: "Overall",
+  },
+  {
+    id: 15,
+    src: require("@/assets/images/clothes/overall/2.png"),
+    name: "Graphic T-Shirt",
+    price: "$19.99",
+    category: "Overall",
+  },
+  {
+    id: 16,
+    src: require("@/assets/images/clothes/overall/3.png"),
+    name: "Plain T-Shirt",
+    price: "$14.99",
+    category: "Overall",
+  },
+  {
+    id: 17,
+    src: require("@/assets/images/clothes/overall/4.png"),
+    name: "Casual Shirt",
+    price: "$14.99",
+    category: "Overall",
+  },
+];
 
 export default function Clothes() {
   const colorScheme = useColorScheme();
   const dark = colorScheme === "dark";
 
+  const renderItem = ({ item }: { item: (typeof clothesData)[0] }) => (
+    <ThemedView style={{ flex: 1, margin: 8 }}>
+      <Image
+        source={item.src}
+        style={{
+          width: 160,
+          height: 160,
+          borderRadius: 10,
+          resizeMode: "cover",
+        }}
+      />
+      <ThemedText fontWeight="medium" textSize="sm" style={{ marginTop: 8 }}>
+        {item.name}
+      </ThemedText>
+      <ThemedText fontWeight="medium" textSize="sm">
+        {item.price}
+      </ThemedText>
+    </ThemedView>
+  );
+
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        justifyContent: "center",
+        // justifyContent: "center",
         backgroundColor: dark ? "#000000" : "#FFFFFF",
       }}
     >
@@ -24,8 +175,41 @@ export default function Clothes() {
           gap: 16,
         }}
       >
-        <ThemedText>Clothes Screen</ThemedText>
+        <ThemedView
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            width: "90%",
+            height: "auto",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            borderWidth: 2,
+            borderRadius: 10,
+            borderColor: dark ? "#FFFFFF" : "#000000",
+            paddingVertical: 10,
+            paddingHorizontal: 16,
+            gap: 8,
+          }}
+        >
+          <Search />
+          <ThemedText fontWeight="medium" textSize="md">
+            Search
+          </ThemedText>
+        </ThemedView>
       </ThemedView>
+
+      <FlatList
+        data={clothesData}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={renderItem}
+        numColumns={2}
+        columnWrapperStyle={{
+          justifyContent: "space-between",
+          paddingHorizontal: 8,
+        }}
+        contentContainerStyle={{ paddingVertical: 16 }}
+        showsVerticalScrollIndicator={false}
+      />
     </SafeAreaView>
   );
 }

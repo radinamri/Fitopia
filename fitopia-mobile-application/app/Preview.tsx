@@ -7,6 +7,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useVirtualTryOn } from "@/context/VirtualTryOnContext";
 import { router } from "expo-router";
+import { useState } from "react";
 import {
   Dimensions,
   SafeAreaView,
@@ -20,6 +21,16 @@ export default function Preview() {
   const colorScheme = useColorScheme();
   const dark = colorScheme === "dark";
   const { virtualTryOnImages, setVirtualTryOnImages } = useVirtualTryOn();
+
+  const [showResult, setShowResult] = useState(true); // true = resultImage, false = modelImage
+
+  const toggleImage = () => {
+    setShowResult((prev) => !prev);
+  };
+
+  const currentImage = showResult
+    ? virtualTryOnImages.resultImage
+    : virtualTryOnImages.modelImage;
 
   return (
     <SafeAreaView
@@ -39,6 +50,8 @@ export default function Preview() {
           gap: 16,
         }}
       >
+        <ThemedText>model: {virtualTryOnImages.modelImage}</ThemedText>
+        <ThemedText>result: {virtualTryOnImages.resultImage}</ThemedText>
         <ThemedView
           style={{
             width: width * 0.8,
@@ -51,9 +64,9 @@ export default function Preview() {
             alignItems: "center",
           }}
         >
-          {virtualTryOnImages.resultImage ? (
+          {currentImage ? (
             <Image
-              source={{ uri: virtualTryOnImages.resultImage }}
+              source={{ uri: currentImage }}
               style={{ width: "100%", height: "100%" }}
             />
           ) : (
@@ -72,6 +85,7 @@ export default function Preview() {
               padding: 3,
               borderRadius: "50%",
             }}
+            onPress={toggleImage}
           >
             <ArrowRepeat />
           </TouchableOpacity>

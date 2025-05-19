@@ -30,7 +30,7 @@ function UploadClothImageContent() {
   };
 
   const handleBrowseCloth = () => {
-    router.push({ pathname: "/GenderSelection" });
+    router.push({ pathname: "/Clothes" });
   };
 
   const handleBack = () => {

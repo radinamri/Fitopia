@@ -10,7 +10,7 @@ import {
 import ChevronLeft from "@/assets/images/icons/ChevronLeft";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { useVirtualTryOn } from "@/context/VirtualTryOnContext";
 
 const menModels = [
@@ -101,6 +101,7 @@ export default function AvatarSelection() {
       setVirtualTryOnImages((prev) => ({
         ...prev,
         modelImage: avatar,
+        resultImage: "@/assets/images/models/men/2.png",
       }));
     },
     [setVirtualTryOnImages]

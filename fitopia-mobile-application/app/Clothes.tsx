@@ -1,13 +1,16 @@
 import Search from "@/assets/images/icons/Search";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   SafeAreaView,
   useColorScheme,
   Image,
   FlatList,
   TextInput,
+  Animated,
+  TouchableOpacity,
+  Keyboard,
 } from "react-native";
 
 type ClothesItem = {
@@ -145,6 +148,17 @@ export default function Clothes() {
   const dark = colorScheme === "dark";
 
   const [searchText, setSearchText] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+
+  const searchWidth = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.timing(searchWidth, {
+      toValue: isSearching ? 0.1 : 1, // shrink to 80% when searching
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  }, [isSearching]);
 
   const renderItem = ({ item }: { item: (typeof clothesData)[0] }) => (
     <ThemedView style={{ alignItems: "flex-start" }}>
@@ -176,28 +190,27 @@ export default function Clothes() {
     >
       <ThemedView
         style={{
-          display: "flex",
-          width: "100%",
-          justifyContent: "center",
+          flexDirection: "row",
           alignItems: "center",
+          width: "100%",
+          paddingHorizontal: 16,
           marginTop: 32,
-          gap: 16,
         }}
       >
-        <ThemedView
+        <Animated.View
           style={{
-            display: "flex",
             flexDirection: "row",
-            width: "90%",
-            height: "auto",
-            justifyContent: "flex-start",
             alignItems: "center",
             borderWidth: 2,
-            borderRadius: 10,
             borderColor: dark ? "#FFFFFF" : "#000000",
+            borderRadius: 10,
             paddingVertical: 10,
             paddingHorizontal: 16,
             gap: 8,
+            width: searchWidth.interpolate({
+              inputRange: [0, 1],
+              outputRange: ["80%", "100%"],
+            }),
           }}
         >
           <Search />
@@ -206,14 +219,36 @@ export default function Clothes() {
             placeholderTextColor={dark ? "#FFFFFF" : "#000000"}
             value={searchText}
             onChangeText={setSearchText}
+            onFocus={() => setIsSearching(true)}
             style={{
               flex: 1,
               color: dark ? "#FFFFFF" : "#000000",
-              fontWeight: "medium",
+              fontWeight: "500",
               fontSize: 16,
             }}
           />
-        </ThemedView>
+        </Animated.View>
+
+        {isSearching && (
+          <TouchableOpacity
+            onPress={() => {
+              setIsSearching(false);
+              setSearchText("");
+              Keyboard.dismiss();
+            }}
+            style={{ marginLeft: 12 }}
+          >
+            <ThemedText
+              fontWeight="bold"
+              textSize="md"
+              style={{
+                color: "orange",
+              }}
+            >
+              Cancel
+            </ThemedText>
+          </TouchableOpacity>
+        )}
       </ThemedView>
       <ThemedView
         style={{

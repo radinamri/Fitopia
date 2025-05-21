@@ -11,6 +11,8 @@ import {
   Animated,
   TouchableOpacity,
   Keyboard,
+  Pressable,
+  Modal,
 } from "react-native";
 
 type ClothesItem = {
@@ -149,6 +151,8 @@ export default function Clothes() {
 
   const [searchText, setSearchText] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<ClothesItem | null>(null);
 
   const searchWidth = useRef(new Animated.Value(1)).current;
 
@@ -160,31 +164,50 @@ export default function Clothes() {
     }).start();
   }, [isSearching]);
 
-  const renderItem = ({ item }: { item: (typeof clothesData)[0] }) => (
-    <ThemedView style={{ alignItems: "flex-start" }}>
-      <Image
-        source={item.src}
-        style={{
-          width: 160,
-          height: 160,
-          borderRadius: 10,
-          resizeMode: "cover",
-        }}
-      />
-      <ThemedText fontWeight="semibold" textSize="sm" style={{ marginTop: 8 }}>
-        {item.name}
-      </ThemedText>
-      <ThemedText fontWeight="medium" textSize="sm" style={{ color: "orange" }}>
-        {item.price}
-      </ThemedText>
-    </ThemedView>
+  const openModal = (item: ClothesItem) => {
+    setSelectedItem(item);
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedItem(null);
+  };
+
+  const renderItem = ({ item }: { item: ClothesItem }) => (
+    <TouchableOpacity onPress={() => openModal(item)}>
+      <ThemedView style={{ alignItems: "flex-start" }}>
+        <Image
+          source={item.src}
+          style={{
+            width: 160,
+            height: 160,
+            borderRadius: 10,
+            resizeMode: "cover",
+          }}
+        />
+        <ThemedText
+          fontWeight="semibold"
+          textSize="sm"
+          style={{ marginTop: 8 }}
+        >
+          {item.name}
+        </ThemedText>
+        <ThemedText
+          fontWeight="medium"
+          textSize="sm"
+          style={{ color: "orange" }}
+        >
+          {item.price}
+        </ThemedText>
+      </ThemedView>
+    </TouchableOpacity>
   );
 
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        // justifyContent: "center",
         backgroundColor: dark ? "#000000" : "#FFFFFF",
       }}
     >
@@ -228,7 +251,6 @@ export default function Clothes() {
             }}
           />
         </Animated.View>
-
         {isSearching && (
           <TouchableOpacity
             onPress={() => {
@@ -241,9 +263,7 @@ export default function Clothes() {
             <ThemedText
               fontWeight="bold"
               textSize="md"
-              style={{
-                color: "orange",
-              }}
+              style={{ color: "orange" }}
             >
               Cancel
             </ThemedText>
@@ -251,11 +271,7 @@ export default function Clothes() {
         )}
       </ThemedView>
       <ThemedView
-        style={{
-          width: "100%",
-          alignItems: "center",
-          marginTop: 32,
-        }}
+        style={{ width: "100%", alignItems: "center", marginTop: 32 }}
       >
         <FlatList
           data={clothesData.filter((item) =>
@@ -273,6 +289,116 @@ export default function Clothes() {
           showsVerticalScrollIndicator={false}
         />
       </ThemedView>
+      {/* Modal */}
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={closeModal}
+      >
+        <ThemedView
+          style={{
+            flex: 1,
+            backgroundColor: "rgba(0,0,0,1)",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 16,
+          }}
+        >
+          <ThemedView
+            style={{
+              width: "100%",
+              borderRadius: 32,
+              padding: 20,
+              alignItems: "center",
+              backgroundColor: "#FFFFFF",
+            }}
+          >
+            {selectedItem && (
+              <>
+                <Image
+                  source={selectedItem.src}
+                  style={{
+                    width: 250,
+                    height: 250,
+                    borderRadius: 20,
+                    marginBottom: 16,
+                    resizeMode: "contain",
+                  }}
+                />
+                <ThemedText
+                  fontWeight="semibold"
+                  textSize="2xl"
+                  style={{ color: "#000000", marginBottom: 4 }}
+                >
+                  {selectedItem.name}
+                </ThemedText>
+                <ThemedText
+                  fontWeight="medium"
+                  textSize="lg"
+                  style={{ color: "orange" }}
+                >
+                  {selectedItem.price}
+                </ThemedText>
+                <ThemedView
+                  style={{
+                    width: 250,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    marginTop: 32,
+                    backgroundColor: "#FFFFFF",
+                    gap: 16,
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={() => {
+                      console.log("Try On pressed");
+                      closeModal();
+                    }}
+                    style={{
+                      backgroundColor: "orange",
+                      paddingVertical: 16,
+                      paddingHorizontal: 0,
+                      borderRadius: 10,
+                      flex: 1,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <ThemedText
+                      fontWeight="semibold"
+                      textSize="lg"
+                      style={{ color: "#fff" }}
+                    >
+                      Try On
+                    </ThemedText>
+                  </TouchableOpacity>
+                  <Pressable
+                    onPress={closeModal}
+                    style={{
+                      backgroundColor: "#f0f0f0",
+                      paddingVertical: 16,
+                      paddingHorizontal: 0,
+                      borderRadius: 10,
+                      flex: 1,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <ThemedText
+                      fontWeight="semibold"
+                      textSize="lg"
+                      style={{ color: "#333" }}
+                    >
+                      Close
+                    </ThemedText>
+                  </Pressable>
+                </ThemedView>
+              </>
+            )}
+          </ThemedView>
+        </ThemedView>
+      </Modal>
     </SafeAreaView>
   );
 }

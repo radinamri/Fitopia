@@ -51,6 +51,7 @@ export default function Preview() {
         }}
       >
         <ThemedText>model: {virtualTryOnImages.modelImage}</ThemedText>
+        <ThemedText>cloth: {virtualTryOnImages.clothImage}</ThemedText>
         <ThemedText>result: {virtualTryOnImages.resultImage}</ThemedText>
         <ThemedView
           style={{

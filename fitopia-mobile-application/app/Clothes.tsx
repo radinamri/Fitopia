@@ -14,6 +14,8 @@ import {
   Pressable,
   Modal,
 } from "react-native";
+import { useVirtualTryOn } from "@/context/VirtualTryOnContext";
+import { router } from "expo-router";
 
 type ClothesItem = {
   id: number;
@@ -148,6 +150,8 @@ const clothesData: ClothesItem[] = [
 export default function Clothes() {
   const colorScheme = useColorScheme();
   const dark = colorScheme === "dark";
+
+  const { setVirtualTryOnImages } = useVirtualTryOn();
 
   const [searchText, setSearchText] = useState("");
   const [isSearching, setIsSearching] = useState(false);
@@ -352,8 +356,14 @@ export default function Clothes() {
                 >
                   <TouchableOpacity
                     onPress={() => {
-                      console.log("Try On pressed");
+                      if (selectedItem) {
+                        setVirtualTryOnImages((prev) => ({
+                          ...prev,
+                          clothImage: selectedItem.src,
+                        }));
+                      }
                       closeModal();
+                      router.push("/Preview");
                     }}
                     style={{
                       backgroundColor: "orange",

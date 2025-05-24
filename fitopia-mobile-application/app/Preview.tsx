@@ -14,7 +14,11 @@ import {
   useColorScheme,
   Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
+import * as MediaLibrary from "expo-media-library";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
 
 export default function Preview() {
   const { width } = Dimensions.get("window");
@@ -31,6 +35,75 @@ export default function Preview() {
   const currentImage = showResult
     ? virtualTryOnImages.resultImage
     : virtualTryOnImages.modelImage;
+
+  const downloadImages = async () => {
+    try {
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert(
+          "Permission denied",
+          "Cannot save images without permission."
+        );
+        return;
+      }
+
+      const imagesToDownload = [
+        {
+          uri: virtualTryOnImages.modelImage,
+          label: "modelImage",
+        },
+        {
+          uri: virtualTryOnImages.resultImage,
+          label: "resultImage",
+        },
+      ];
+
+      for (const image of imagesToDownload) {
+        if (!image.uri) continue;
+        const fileName = `${image.label}_${Date.now()}.png`;
+        const fileUri = FileSystem.documentDirectory + fileName;
+
+        const downloadedFile = await FileSystem.downloadAsync(
+          image.uri,
+          fileUri
+        );
+        await MediaLibrary.createAssetAsync(downloadedFile.uri);
+      }
+
+      Alert.alert("Success", "Images saved to your device!");
+    } catch (error) {
+      console.error("Download error:", error);
+      Alert.alert("Error", "Something went wrong while downloading.");
+    }
+  };
+
+  const shareImage = async () => {
+    try {
+      const resultUri = virtualTryOnImages.resultImage;
+      if (!resultUri) {
+        Alert.alert("No image", "No result image to share.");
+        return;
+      }
+
+      const fileName = `shared_result_${Date.now()}.png`;
+      const fileUri = FileSystem.documentDirectory + fileName;
+
+      const downloadedFile = await FileSystem.downloadAsync(resultUri, fileUri);
+
+      if (!(await Sharing.isAvailableAsync())) {
+        Alert.alert(
+          "Not Supported",
+          "Sharing is not available on this device."
+        );
+        return;
+      }
+
+      await Sharing.shareAsync(downloadedFile.uri);
+    } catch (error) {
+      console.error("Share error:", error);
+      Alert.alert("Error", "Could not share the image.");
+    }
+  };
 
   return (
     <SafeAreaView
@@ -50,9 +123,6 @@ export default function Preview() {
           gap: 16,
         }}
       >
-        <ThemedText>model: {virtualTryOnImages.modelImage}</ThemedText>
-        <ThemedText>cloth: {virtualTryOnImages.clothImage}</ThemedText>
-        <ThemedText>result: {virtualTryOnImages.resultImage}</ThemedText>
         <ThemedView
           style={{
             width: width * 0.8,
@@ -100,6 +170,7 @@ export default function Preview() {
           }}
         >
           <TouchableOpacity
+            onPress={downloadImages}
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -121,6 +192,7 @@ export default function Preview() {
             </ThemedText>
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={shareImage}
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -143,6 +215,14 @@ export default function Preview() {
           </TouchableOpacity>
         </ThemedView>
         <TouchableOpacity
+          onPress={() => {
+            setVirtualTryOnImages((prev) => ({
+              ...prev,
+              modelImage: virtualTryOnImages.resultImage,
+              clothImage: null,
+            }));
+            router.push("/Clothes");
+          }}
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -164,12 +244,18 @@ export default function Preview() {
           </ThemedText>
         </TouchableOpacity>
         <TouchableOpacity
+          onPress={() => {
+            setVirtualTryOnImages((prev) => ({
+              ...prev,
+              modelImage: null,
+            }));
+            router.push("/");
+          }}
           style={{
             flexDirection: "row",
             alignItems: "center",
             gap: 2,
           }}
-          onPress={() => router.push("/")}
         >
           <PersonStanding />
           <ThemedText

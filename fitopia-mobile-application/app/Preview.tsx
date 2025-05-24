@@ -220,6 +220,7 @@ export default function Preview() {
               ...prev,
               modelImage: virtualTryOnImages.resultImage,
               clothImage: null,
+              resultImage: null,
             }));
             router.push("/Clothes");
           }}
@@ -248,6 +249,7 @@ export default function Preview() {
             setVirtualTryOnImages((prev) => ({
               ...prev,
               modelImage: null,
+              resultImage: null,
             }));
             router.push("/");
           }}

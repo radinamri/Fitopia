@@ -209,7 +209,7 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({
             )}
             <TouchableOpacity
               style={{ position: "absolute", top: 10, right: 10 }}
-              onPress={handleRemoveImage}
+              onPress={handleImagePress}
             >
               <ArrowUpCircleFill />
             </TouchableOpacity>

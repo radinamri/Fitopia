@@ -93,7 +93,7 @@ export default function AvatarSelection() {
     setVirtualTryOnImages((prev) => ({ ...prev, modelImage: null }));
   }, [gender, setVirtualTryOnImages]);
 
-  const handleBack = () => router.push("/GenderSelection");
+  const handleBack = () => router.replace("/GenderSelection");
 
   const handleAvatarSelect = useCallback(
     (avatar: number, index: number) => {

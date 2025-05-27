@@ -2,9 +2,9 @@ import React, { createContext, useState, ReactNode } from "react";
 
 // Define the structure for virtual try-on related images
 interface VirtualTryOnImages {
-  modelImage?: any; // Image of the model
-  clothImage?: any; // Image of the clothing item
-  resultImage?: any; // Resultant image after virtual try-on
+  modelImage?: string | null; // Image of the model
+  clothImage?: string | null; // Image of the clothing item
+  resultImage?: string | null; // Resultant image after virtual try-on
 }
 
 // Define the gender type

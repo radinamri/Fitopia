@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, useColorScheme } from "react-native";
+import { Alert, TouchableOpacity, useColorScheme } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useVirtualTryOn } from "@/context/VirtualTryOnContext";
@@ -19,7 +19,29 @@ export default function UploadModelImage() {
   };
 
   const handleTryWithAnAvatar = () => {
-    router.push({ pathname: "/GenderSelection" });
+    if (virtualTryOnImages.modelImage !== null) {
+      Alert.alert(
+        "Replace Uploaded Photo?", // <<< YOUR TITLE
+        "You've already uploaded a photo. Continuing with an avatar will remove your current photo. Do you want to proceed?",
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+          {
+            text: "Use Avatar",
+            onPress: () => {
+              setVirtualTryOnImages((prev) => ({ ...prev, modelImage: null }));
+              router.push({ pathname: "/GenderSelection" });
+            },
+            style: "destructive", // Indicates action might remove data
+          },
+        ]
+      );
+    } else {
+      // No photo uploaded, just go to avatar selection
+      router.push({ pathname: "/GenderSelection" });
+    }
   };
 
   return (

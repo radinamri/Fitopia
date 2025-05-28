@@ -26,7 +26,11 @@ function UploadClothImageContent() {
   const { virtualTryOnImages, setVirtualTryOnImages } = useVirtualTryOn();
 
   const handleClothImageUpload = (uri: string) => {
-    setVirtualTryOnImages((prev) => ({ ...prev, clothImage: uri }));
+    setVirtualTryOnImages((prev) => ({
+      ...prev,
+      clothImage: uri,
+      resultImage: null,
+    }));
   };
 
   const handleBrowseCloth = () => {
@@ -34,8 +38,20 @@ function UploadClothImageContent() {
   };
 
   const handleBack = () => {
-    router.push({ pathname: "/GenderSelection" });
+    // Navigate to the previous screen in the stack
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      // Fallback if no screen to go back to (e.g., deep link or unexpected state)
+      // This should ideally navigate to a logical previous step or a safe default screen.
+      // For example, if AvatarSelection or UploadModelImage usually precedes this:
+      router.replace({ pathname: "/AvatarSelection" }); // Or "/UploadModelImage" or "/"
+    }
   };
+
+  const canTryOn =
+    virtualTryOnImages.modelImage !== null &&
+    virtualTryOnImages.clothImage !== null;
 
   return (
     <SafeAreaView
@@ -48,12 +64,14 @@ function UploadClothImageContent() {
       <TouchableOpacity
         style={{ position: "absolute", top: 40, left: 10 }}
         onPress={handleBack}
+        accessibilityRole="button"
+        accessibilityLabel="Go back"
+        accessibilityHint="Navigates to the previous screen"
       >
         <ChevronLeft />
       </TouchableOpacity>
       <ThemedView
         style={{
-          display: "flex",
           width: "100%",
           justifyContent: "center",
           alignItems: "center",
@@ -70,11 +88,13 @@ function UploadClothImageContent() {
         />
         <TouchableOpacity
           style={{
-            display: "flex",
             flexDirection: "row",
             alignItems: "center",
           }}
           onPress={handleBrowseCloth}
+          accessibilityRole="button"
+          accessibilityLabel="Browse cloth from our clothes"
+          accessibilityHint="Navigates to the clothes Browse screen"
         >
           <ThemedText
             fontWeight="medium"
@@ -85,17 +105,24 @@ function UploadClothImageContent() {
           </ThemedText>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => router.push("/Preview")}
+          onPress={() => {
+            if (canTryOn) {
+              // Ensure modelImage is also present
+              router.push("/Preview");
+            }
+          }}
           style={{
             backgroundColor: "orange",
-            padding: 8,
-            paddingStart: 16,
-            paddingEnd: 16,
-            borderRadius: 8,
+            paddingVertical: 12, // Increased padding
+            paddingHorizontal: 24, // Increased padding
+            borderRadius: 10, // Consistent rounding
             marginTop: 16,
-            opacity: virtualTryOnImages.clothImage !== null ? 1 : 0.5,
+            opacity: canTryOn ? 1 : 0.5, // Depends on both model and cloth image
           }}
-          disabled={virtualTryOnImages.clothImage === null}
+          disabled={!canTryOn} // Disable if either model or cloth image is missing
+          accessibilityRole="button"
+          accessibilityLabel="Try On"
+          accessibilityHint="Proceeds to the virtual try-on preview screen"
         >
           <ThemedText fontWeight="semibold" textSize="2xl">
             TRY ON

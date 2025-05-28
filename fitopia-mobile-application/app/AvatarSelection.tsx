@@ -73,15 +73,21 @@ const womenModels = [
 ];
 
 const { width } = Dimensions.get("window");
+// Using avatarImageWidth as defined in your provided snippet
 const avatarImageWidth = width * 0.2;
 const avatarImageHeight = (avatarImageWidth * 4) / 3;
+const itemSpacing = 8; // Used for marginBottom on items and in column height calculation
+const columnSpacing = 8; // Used for marginRight on columns
 
 export default function AvatarSelection() {
   const colorScheme = useColorScheme();
   const dark = colorScheme === "dark";
 
   const { gender, setVirtualTryOnImages } = useVirtualTryOn();
-  const [selectedAvatar, setSelectedAvatar] = useState<number | null>(null);
+  // Renamed selectedAvatar to selectedAvatarIndex for clarity as it stores the index
+  const [selectedAvatarIndex, setSelectedAvatarIndex] = useState<number | null>(
+    null
+  );
 
   const avatars = useMemo(
     () => (gender === "Male" ? menModels : womenModels),
@@ -89,23 +95,43 @@ export default function AvatarSelection() {
   );
 
   useEffect(() => {
-    setSelectedAvatar(null);
-    setVirtualTryOnImages((prev) => ({ ...prev, modelImage: null }));
+    // When gender changes, reset avatar selection and relevant context images
+    setSelectedAvatarIndex(null);
+    setVirtualTryOnImages((prev) => ({
+      ...prev,
+      modelImage: null, // Clears modelImage, compatible with string | null
+      resultImage: null, // Clear result image as well
+    }));
   }, [gender, setVirtualTryOnImages]);
 
-  const handleBack = () => router.replace("/GenderSelection");
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      // Fallback if there's no screen to go back to (e.g., deep link)
+      router.replace({ pathname: "/GenderSelection" }); // Or your app's default flow start
+    }
+  };
 
   const handleAvatarSelect = useCallback(
-    (avatar: number, index: number) => {
-      setSelectedAvatar(index);
+    (avatarAssetId: number, index: number) => {
+      // avatarAssetId is the require() output (a number)
+      setSelectedAvatarIndex(index);
+      const resolvedAsset = Image.resolveAssetSource(avatarAssetId);
+      const imageUri = resolvedAsset ? resolvedAsset.uri : null; // Get the URI string
+
       setVirtualTryOnImages((prev) => ({
         ...prev,
-        modelImage: avatar,
-        resultImage: "@/assets/images/models/men/2.png",
+        modelImage: imageUri, // Store the URI string in context
+        resultImage: null, // Clear any previous VTO result image
       }));
     },
     [setVirtualTryOnImages]
   );
+
+  // The source for the preview <Image> component will be the require() ID for local display
+  const previewImageSource =
+    selectedAvatarIndex !== null ? avatars[selectedAvatarIndex] : null;
 
   return (
     <SafeAreaView
@@ -116,23 +142,36 @@ export default function AvatarSelection() {
       }}
     >
       <TouchableOpacity
-        style={{ position: "absolute", top: 40, left: 10 }}
+        style={{
+          position: "absolute",
+          top: 50,
+          left: 16,
+          zIndex: 10,
+          padding: 8,
+        }}
         onPress={handleBack}
+        accessibilityRole="button"
+        accessibilityLabel="Go back"
+        accessibilityHint="Navigates to gender selection screen"
       >
         <ChevronLeft />
       </TouchableOpacity>
 
-      <ThemedView
+      <ThemedView // Main content container
         style={{
-          display: "flex",
+          flex: 1,
           width: "100%",
-          justifyContent: "center",
           alignItems: "center",
-          marginTop: 32,
+          paddingTop: 40,
           gap: 16,
         }}
       >
-        {/* Preview */}
+        {/* <ThemedText fontWeight="semibold" textSize="3xl">
+          {" "}
+          Choose Your Avatar
+        </ThemedText> */}
+
+        {/* Preview Area */}
         <ThemedView
           style={{
             width: width * 0.6,
@@ -143,16 +182,21 @@ export default function AvatarSelection() {
             borderColor: dark ? "#FFFFFF" : "#000000",
             justifyContent: "center",
             alignItems: "center",
+            backgroundColor: dark ? "#1C1C1E" : "#F2F2F7",
           }}
         >
-          {selectedAvatar !== null ? (
+          {previewImageSource !== null ? ( // Check against null
             <Image
-              source={avatars[selectedAvatar]}
+              source={previewImageSource} // Use require() ID for local preview
               style={{ width: "100%", height: "100%" }}
               resizeMode="cover"
             />
           ) : (
-            <ThemedText fontWeight="semibold" textSize="xl">
+            <ThemedText
+              fontWeight="semibold"
+              textSize="xl"
+              style={{ color: dark ? "#555" : "#AAA" }}
+            >
               Choose Your Avatar
             </ThemedText>
           )}
@@ -164,56 +208,75 @@ export default function AvatarSelection() {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{
             paddingHorizontal: 16,
+            paddingVertical: 10,
           }}
+          style={{ maxHeight: avatarImageHeight * 2 + itemSpacing + 20 }}
         >
           <ThemedView style={{ flexDirection: "row" }}>
             {Array.from({ length: Math.ceil(avatars.length / 2) }).map(
               (_, columnIndex) => {
-                const firstIndex = columnIndex * 2;
-                const secondIndex = firstIndex + 1;
+                const firstIndexInColumn = columnIndex * 2;
+                const secondIndexInColumn = firstIndexInColumn + 1;
 
                 return (
                   <ThemedView
-                    key={columnIndex}
+                    key={`column-${columnIndex}`}
                     style={{
-                      marginRight: 10,
+                      marginRight: columnSpacing,
                       flexDirection: "column",
-                      justifyContent: "space-between",
-                      height: avatarImageHeight * 2 + 10,
+                      // Height is implicitly defined by children, or use avatarImageHeight * 2 + itemSpacing
+                      // Original was: justifyContent: "space-between", height: avatarImageHeight * 2 + 10
+                      // Simpler to let flexbox handle vertical spacing if items have fixed height + marginBottom
                     }}
                   >
-                    {[firstIndex, secondIndex].map((index) => {
-                      if (index >= avatars.length) return null;
+                    {[firstIndexInColumn, secondIndexInColumn].map(
+                      (avatarIndex) => {
+                        if (avatarIndex >= avatars.length) return null;
 
-                      const isSelected = index === selectedAvatar;
+                        const currentAvatarAssetId = avatars[avatarIndex]; // This is the require() ID
+                        const isSelected = avatarIndex === selectedAvatarIndex;
 
-                      return (
-                        <TouchableOpacity
-                          key={index}
-                          onPress={() =>
-                            handleAvatarSelect(avatars[index], index)
-                          }
-                          style={{
-                            width: avatarImageWidth,
-                            height: avatarImageHeight,
-                            marginBottom: 8,
-                            borderRadius: 12,
-                            overflow: "hidden",
-                            borderWidth: isSelected ? 3 : 0,
-                            borderColor: isSelected ? "orange" : "transparent",
-                          }}
-                        >
-                          <Image
-                            source={avatars[index]}
+                        return (
+                          <TouchableOpacity
+                            key={`avatar-${avatarIndex}`}
+                            onPress={() =>
+                              handleAvatarSelect(
+                                currentAvatarAssetId,
+                                avatarIndex
+                              )
+                            }
                             style={{
-                              width: "100%",
-                              height: "100%",
+                              width: avatarImageWidth,
+                              height: avatarImageHeight,
+                              marginBottom: itemSpacing,
+                              borderRadius: 12,
+                              overflow: "hidden",
+                              borderWidth: 2,
+                              borderColor: isSelected
+                                ? "orange"
+                                : dark
+                                ? "#444"
+                                : "#DDD",
+                              backgroundColor: dark ? "#2C2C2E" : "#E5E5EA",
                             }}
-                            resizeMode="cover"
-                          />
-                        </TouchableOpacity>
-                      );
-                    })}
+                            accessibilityRole="button"
+                            accessibilityLabel={`Select avatar ${
+                              avatarIndex + 1
+                            }`}
+                            accessibilityState={{ selected: isSelected }}
+                          >
+                            <Image
+                              source={currentAvatarAssetId} // Use require() ID for grid thumbnails
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                              }}
+                              resizeMode="cover"
+                            />
+                          </TouchableOpacity>
+                        );
+                      }
+                    )}
                   </ThemedView>
                 );
               }
@@ -228,9 +291,7 @@ export default function AvatarSelection() {
             paddingStart: 16,
             paddingEnd: 16,
             borderRadius: 8,
-            opacity: selectedAvatar !== null ? 1 : 0.5,
           }}
-          disabled={selectedAvatar === null}
         >
           <ThemedText fontWeight="semibold" textSize="2xl">
             Next

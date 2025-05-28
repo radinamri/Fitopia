@@ -14,12 +14,12 @@ import ChevronLeft from "@/assets/images/icons/ChevronLeft";
 export default function UploadClothImage() {
   return (
     <VirtualTryOnProvider>
-      <UploadClothImageContent />
+      <UploadClothContent />
     </VirtualTryOnProvider>
   );
 }
 
-function UploadClothImageContent() {
+function UploadClothContent() {
   const colorScheme = useColorScheme();
   const dark = colorScheme === "dark";
 
@@ -113,9 +113,9 @@ function UploadClothImageContent() {
           }}
           style={{
             backgroundColor: "orange",
-            paddingVertical: 12, // Increased padding
-            paddingHorizontal: 24, // Increased padding
-            borderRadius: 10, // Consistent rounding
+            paddingVertical: 12,
+            paddingHorizontal: 24,
+            borderRadius: 10,
             marginTop: 16,
             opacity: canTryOn ? 1 : 0.5, // Depends on both model and cloth image
           }}

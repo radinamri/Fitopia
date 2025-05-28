@@ -287,11 +287,13 @@ export default function AvatarSelection() {
           onPress={() => router.push("/UploadCloth")}
           style={{
             backgroundColor: "orange",
-            padding: 8,
-            paddingStart: 16,
-            paddingEnd: 16,
-            borderRadius: 8,
+            paddingVertical: 12,
+            paddingHorizontal: 24,
+            borderRadius: 10,
           }}
+          accessibilityRole="button"
+          accessibilityLabel="Next"
+          accessibilityHint="Proceeds to the upload cloth screen"
         >
           <ThemedText fontWeight="semibold" textSize="2xl">
             Next

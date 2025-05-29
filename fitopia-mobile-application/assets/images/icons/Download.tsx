@@ -4,7 +4,7 @@ import { useColorScheme } from "react-native";
 
 export default function Download() {
   const colorScheme = useColorScheme();
-  const fillColor = colorScheme === "dark" ? "#000000" : "#FFFFFF";
+  const fillColor = colorScheme === "dark" ? "#FFFFFF" : "#000000";
 
   return (
     <Svg width="20" height="20" fill={fillColor} viewBox="0 0 16 16">

@@ -90,14 +90,16 @@ export default function UploadModelImage() {
           onPress={() => router.push("/UploadCloth")}
           style={{
             backgroundColor: "orange",
-            padding: 8,
-            paddingStart: 16,
-            paddingEnd: 16,
-            borderRadius: 8,
+            paddingVertical: 12,
+            paddingHorizontal: 24,
+            borderRadius: 10,
             marginTop: 16,
             opacity: virtualTryOnImages.modelImage !== null ? 1 : 0.5,
           }}
           disabled={virtualTryOnImages.modelImage === null}
+          accessibilityRole="button"
+          accessibilityLabel="Next"
+          accessibilityHint="Proceeds to the upload cloth screen"
         >
           <ThemedText fontWeight="semibold" textSize="2xl">
             Next

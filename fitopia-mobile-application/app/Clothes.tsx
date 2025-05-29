@@ -1,11 +1,8 @@
-import Search from "@/assets/images/icons/Search";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   SafeAreaView,
   useColorScheme,
-  Image,
+  Image, // Import Image
   FlatList,
   TextInput,
   Animated,
@@ -14,17 +11,21 @@ import {
   Pressable,
   Modal,
 } from "react-native";
+import Search from "@/assets/images/icons/Search";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
 import { useVirtualTryOn } from "@/context/VirtualTryOnContext";
 import { router } from "expo-router";
 
 type ClothesItem = {
   id: number;
-  src: any;
+  src: number; // Changed from 'any' to 'number' as it's from require()
   name: string;
   price: string;
   category: string;
 };
 
+// Your clothesData remains the same, as item.src is correctly a require() output
 const clothesData: ClothesItem[] = [
   {
     id: 1,
@@ -151,7 +152,9 @@ export default function Clothes() {
   const colorScheme = useColorScheme();
   const dark = colorScheme === "dark";
 
-  const { setVirtualTryOnImages } = useVirtualTryOn();
+  // Destructure virtualTryOnImages as well if you need to read from it,
+  // but for this specific change, only setVirtualTryOnImages is strictly needed for the update.
+  const { virtualTryOnImages, setVirtualTryOnImages } = useVirtualTryOn();
 
   const [searchText, setSearchText] = useState("");
   const [isSearching, setIsSearching] = useState(false);
@@ -162,7 +165,7 @@ export default function Clothes() {
 
   useEffect(() => {
     Animated.timing(searchWidth, {
-      toValue: isSearching ? 0.1 : 1, // shrink to 80% when searching
+      toValue: isSearching ? 0.1 : 1,
       duration: 200,
       useNativeDriver: false,
     }).start();
@@ -178,11 +181,42 @@ export default function Clothes() {
     setSelectedItem(null);
   };
 
+  const handleTryOnPress = () => {
+    if (selectedItem) {
+      const resolvedAsset = Image.resolveAssetSource(selectedItem.src);
+      const clothUri = resolvedAsset ? resolvedAsset.uri : null;
+
+      console.log(
+        "Clothes.tsx (Try On) - Resolved cloth URI to be set:",
+        clothUri
+      );
+      console.log(
+        "Clothes.tsx (Try On) - Current modelImage from context:",
+        virtualTryOnImages.modelImage
+      );
+
+      setVirtualTryOnImages((prev) => {
+        const newState = {
+          ...prev,
+          clothImage: clothUri, // Store the URI string
+          resultImage: null, // Clear previous result image
+        };
+        console.log(
+          "Clothes.tsx (Try On) - Context state AFTER update attempt:",
+          JSON.stringify(newState, null, 2)
+        );
+        return newState;
+      });
+    }
+    closeModal();
+    router.push("/Preview");
+  };
+
   const renderItem = ({ item }: { item: ClothesItem }) => (
     <TouchableOpacity onPress={() => openModal(item)}>
       <ThemedView style={{ alignItems: "flex-start" }}>
         <Image
-          source={item.src}
+          source={item.src} // Displays the local image via its require() ID
           style={{
             width: 160,
             height: 160,
@@ -215,13 +249,14 @@ export default function Clothes() {
         backgroundColor: dark ? "#000000" : "#FFFFFF",
       }}
     >
+      {/* Search Bar Area */}
       <ThemedView
         style={{
           flexDirection: "row",
           alignItems: "center",
           width: "100%",
           paddingHorizontal: 16,
-          marginTop: 32,
+          marginTop: 32, // Assuming this screen doesn't have the same absolute positioned back button
         }}
       >
         <Animated.View
@@ -236,7 +271,7 @@ export default function Clothes() {
             gap: 8,
             width: searchWidth.interpolate({
               inputRange: [0, 1],
-              outputRange: ["80%", "100%"],
+              outputRange: ["80%", "100%"], // Shrinks to 80% when isSearching is true (0.1 in your effect maps to 80% here)
             }),
           }}
         >
@@ -274,8 +309,10 @@ export default function Clothes() {
           </TouchableOpacity>
         )}
       </ThemedView>
+
+      {/* Clothes List Area */}
       <ThemedView
-        style={{ width: "100%", alignItems: "center", marginTop: 32 }}
+        style={{ width: "100%", alignItems: "center", marginTop: 32, flex: 1 }} // Added flex: 1 for FlatList to scroll properly
       >
         <FlatList
           data={clothesData.filter((item) =>
@@ -293,112 +330,112 @@ export default function Clothes() {
           showsVerticalScrollIndicator={false}
         />
       </ThemedView>
-      {/* Modal */}
+
+      {/* Modal for Selected Item */}
       <Modal
         visible={modalVisible}
         transparent={true}
         animationType="slide"
         onRequestClose={closeModal}
       >
-        <ThemedView
+        <ThemedView // Modal backdrop
           style={{
             flex: 1,
-            backgroundColor: "rgba(0,0,0,1)",
+            backgroundColor: "rgba(0,0,0,0.7)", // Darkened backdrop
             justifyContent: "center",
             alignItems: "center",
             padding: 16,
           }}
         >
-          <ThemedView
+          <ThemedView // Modal content container
             style={{
-              width: "100%",
-              borderRadius: 32,
-              padding: 20,
+              width: "90%", // Adjusted width
+              maxWidth: 400, // Max width for larger screens
+              borderRadius: 20, // Softer rounding
+              padding: 24, // Increased padding
               alignItems: "center",
-              backgroundColor: "#FFFFFF",
+              backgroundColor: dark ? "#1C1C1E" : "#FFFFFF", // Theme-aware background
+              shadowColor: "#000", // Added shadow for depth
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 5,
             }}
           >
             {selectedItem && (
               <>
                 <Image
-                  source={selectedItem.src}
+                  source={selectedItem.src} // Displays local image
                   style={{
-                    width: 250,
-                    height: 250,
-                    borderRadius: 20,
-                    marginBottom: 16,
+                    width: 200, // Adjusted size
+                    height: 200, // Adjusted size
+                    borderRadius: 16, // Softer rounding
+                    marginBottom: 20,
                     resizeMode: "contain",
                   }}
                 />
                 <ThemedText
-                  fontWeight="semibold"
-                  textSize="2xl"
-                  style={{ color: "#000000", marginBottom: 4 }}
+                  fontWeight="bold" // Bolder for title
+                  textSize="xl" // Adjusted size
+                  style={{
+                    color: dark ? "#FFFFFF" : "#000000",
+                    marginBottom: 8,
+                  }}
                 >
                   {selectedItem.name}
                 </ThemedText>
                 <ThemedText
-                  fontWeight="medium"
+                  fontWeight="semibold" // Semibold for price
                   textSize="lg"
-                  style={{ color: "orange" }}
+                  style={{ color: "orange", marginBottom: 24 }} // Added margin
                 >
                   {selectedItem.price}
                 </ThemedText>
-                <ThemedView
+                <ThemedView // Button container
                   style={{
-                    width: 250,
+                    width: "100%", // Full width for buttons
                     flexDirection: "row",
-                    justifyContent: "space-between",
-                    marginTop: 32,
-                    backgroundColor: "#FFFFFF",
-                    gap: 16,
+                    justifyContent: "space-between", // Ensure this works with gap
+                    backgroundColor: "transparent", // Make parent background transparent
+                    gap: 12, // Spacing between buttons
                   }}
                 >
-                  <TouchableOpacity
-                    onPress={() => {
-                      if (selectedItem) {
-                        setVirtualTryOnImages((prev) => ({
-                          ...prev,
-                          clothImage: selectedItem.src,
-                        }));
-                      }
-                      closeModal();
-                      router.push("/Preview");
-                    }}
+                  <TouchableOpacity // Try On Button
+                    onPress={handleTryOnPress} // Use the new handler
                     style={{
                       backgroundColor: "orange",
-                      paddingVertical: 16,
-                      paddingHorizontal: 0,
+                      paddingVertical: 14, // Adjusted padding
                       borderRadius: 10,
                       flex: 1,
                       alignItems: "center",
-                      justifyContent: "center",
                     }}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Try on ${selectedItem.name}`}
                   >
                     <ThemedText
-                      fontWeight="semibold"
-                      textSize="lg"
-                      style={{ color: "#fff" }}
+                      fontWeight="bold" // Bolder text
+                      textSize="md" // Adjusted size
+                      style={{ color: "#FFFFFF" }} // White text on orange
                     >
                       Try On
                     </ThemedText>
                   </TouchableOpacity>
-                  <Pressable
+                  <Pressable // Close Button
                     onPress={closeModal}
                     style={{
-                      backgroundColor: "#f0f0f0",
-                      paddingVertical: 16,
-                      paddingHorizontal: 0,
+                      backgroundColor: dark ? "#3A3A3C" : "#E5E5EA", // Themed background
+                      paddingVertical: 14, // Adjusted padding
                       borderRadius: 10,
                       flex: 1,
                       alignItems: "center",
-                      justifyContent: "center",
                     }}
+                    accessibilityRole="button"
+                    accessibilityLabel="Close modal"
                   >
                     <ThemedText
-                      fontWeight="semibold"
-                      textSize="lg"
-                      style={{ color: "#333" }}
+                      fontWeight="bold" // Bolder text
+                      textSize="md" // Adjusted size
+                      style={{ color: dark ? "#FFFFFF" : "#000000" }} // Themed text
                     >
                       Close
                     </ThemedText>

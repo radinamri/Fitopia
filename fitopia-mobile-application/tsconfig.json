@@ -9,7 +9,7 @@
     }
   },
   "include": [
-    "**/*.ts",
+    "**/*.ts",npm uninstall react-test-renderer @types/react-test-renderer
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"

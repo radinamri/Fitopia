@@ -105,6 +105,10 @@ export default function Preview() {
     }
   };
 
+  console.log(`model: ${virtualTryOnImages.modelImage}`);
+  console.log(`cloth: ${virtualTryOnImages.clothImage}`);
+  console.log(`result: ${virtualTryOnImages.resultImage}`);
+
   return (
     <SafeAreaView
       style={{

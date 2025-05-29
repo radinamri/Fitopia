@@ -12,14 +12,6 @@ import { router } from "expo-router";
 import ChevronLeft from "@/assets/images/icons/ChevronLeft";
 
 export default function UploadClothImage() {
-  return (
-    <VirtualTryOnProvider>
-      <UploadClothContent />
-    </VirtualTryOnProvider>
-  );
-}
-
-function UploadClothContent() {
   const colorScheme = useColorScheme();
   const dark = colorScheme === "dark";
 

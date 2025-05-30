@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   SafeAreaView,
   useColorScheme,
-  Image, // Import Image
+  Image,
   FlatList,
   TextInput,
   Animated,
@@ -10,141 +10,344 @@ import {
   Keyboard,
   Pressable,
   Modal,
+  // View, // No longer explicitly needed just for style if ThemedView is used everywhere
 } from "react-native";
-import Search from "@/assets/images/icons/Search";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { useVirtualTryOn } from "@/context/VirtualTryOnContext";
-import { router } from "expo-router";
+import Search from "@/assets/images/icons/Search"; // Assuming Search is an SVG component or similar
+import { ThemedText } from "@/components/ThemedText"; // Assuming ThemedText is a custom component
+import { ThemedView } from "@/components/ThemedView"; // Assuming ThemedView is a custom component
+import { useVirtualTryOn } from "@/context/VirtualTryOnContext"; // Assuming custom context
+import { router } from "expo-router"; // Assuming expo-router for navigation
 
 type ClothesItem = {
   id: number;
-  src: number; // Changed from 'any' to 'number' as it's from require()
+  src: number;
   name: string;
   price: string;
   category: string;
 };
 
-// Your clothesData remains the same, as item.src is correctly a require() output
 const clothesData: ClothesItem[] = [
   {
     id: 1,
-    src: require("@/assets/images/clothes/upper/1.png"),
-    name: "Casual Shirt",
-    price: "$29.99",
+    src: require("@/assets/images/clothes/upper/Appliquéd cotton blouse-$52.99.png"),
+    name: "APPLIQUÉD COTTON BLOUSE",
+    price: "$52.99",
     category: "Upper",
   },
   {
     id: 2,
-    src: require("@/assets/images/clothes/upper/2.png"),
-    name: "Formal Shirt",
-    price: "$34.99",
-    category: "Upper",
+    src: require("@/assets/images/clothes/overall/Bead-Embellished Knit Dress-$99.00.png"),
+    name: "BEAD-EMBELLISHED KNIT DRESS",
+    price: "$99.00",
+    category: "Overall",
   },
   {
     id: 3,
-    src: require("@/assets/images/clothes/upper/3.png"),
-    name: "Leather Jacket",
-    price: "$99.99",
-    category: "Upper",
+    src: require("@/assets/images/clothes/lower/Belted Shorts-$32.99.png"),
+    name: "BELTED SHORTS",
+    price: "$32.99",
+    category: "Lower",
   },
   {
     id: 4,
-    src: require("@/assets/images/clothes/upper/4.png"),
-    name: "Winter Jacket",
-    price: "$120.00",
+    src: require("@/assets/images/clothes/upper/Cotton T-Shirt-$14.99.png"),
+    name: "COTTON T-SHIRT",
+    price: "$14.99",
     category: "Upper",
   },
   {
     id: 5,
-    src: require("@/assets/images/clothes/upper/5.png"),
-    name: "Denim Jeans",
-    price: "$45.50",
-    category: "Upper",
+    src: require("@/assets/images/clothes/overall/Crochet-Look Dress-$54.99.png"),
+    name: "CROCHET-LOOK DRESS",
+    price: "$54.99",
+    category: "Overall",
   },
   {
     id: 6,
-    src: require("@/assets/images/clothes/upper/6.png"),
-    name: "Chino Pants",
-    price: "$40.00",
-    category: "Upper",
+    src: require("@/assets/images/clothes/lower/Crochet-Look Mini Skirt-$29.99.png"),
+    name: "CROCHET-LOOK MINI SKIRT",
+    price: "$29.99",
+    category: "Lower",
   },
   {
     id: 7,
-    src: require("@/assets/images/clothes/upper/7.png"),
-    name: "Sneakers",
-    price: "$60.00",
-    category: "Upper",
+    src: require("@/assets/images/clothes/overall/Crochet-Look Tunic Dress-$109.00.png"),
+    name: "CROCHET-LOOK TUNIC DRESS",
+    price: "$109.00",
+    category: "Overall",
   },
   {
     id: 8,
-    src: require("@/assets/images/clothes/upper/8.png"),
-    name: "Formal Shoes",
-    price: "$75.00",
-    category: "Upper",
+    src: require("@/assets/images/clothes/lower/Denim Shorts-$24.99.png"),
+    name: "DENIM SHORTS",
+    price: "$24.99",
+    category: "Lower",
   },
   {
     id: 9,
-    src: require("@/assets/images/clothes/lower/1.png"),
-    name: "Summer Dress",
-    price: "$55.99",
-    category: "Lower",
+    src: require("@/assets/images/clothes/upper/Fitted T-shirt-$7.99.png"),
+    name: "FITTED T-SHIRT",
+    price: "$7.99",
+    category: "Upper",
   },
   {
     id: 10,
-    src: require("@/assets/images/clothes/lower/2.png"),
-    name: "Evening Gown",
-    price: "$140.00",
-    category: "Lower",
+    src: require("@/assets/images/clothes/upper/Flounced One-Shoulder Top-$17.99.png"),
+    name: "FLOUNCED ONE-SHOULDER TOP",
+    price: "$17.99",
+    category: "Upper",
   },
   {
     id: 11,
-    src: require("@/assets/images/clothes/lower/3.png"),
-    name: "Casual Hoodie",
-    price: "$39.99",
+    src: require("@/assets/images/clothes/lower/High Waist Denim Shorts-$29.99.png"),
+    name: "HIGH WAIST DENIM SHORTS",
+    price: "$29.99",
     category: "Lower",
   },
   {
     id: 12,
-    src: require("@/assets/images/clothes/lower/4.png"),
-    name: "Zipped Hoodie",
-    price: "$49.99",
+    src: require("@/assets/images/clothes/lower/Lace-Detail Mini Skirt-$24.99.png"),
+    name: "LACE-DETAIL MINI SKIRT",
+    price: "$24.99",
     category: "Lower",
   },
   {
     id: 13,
-    src: require("@/assets/images/clothes/lower/5.png"),
-    name: "Mini Skirt",
-    price: "$25.99",
-    category: "Lower",
+    src: require("@/assets/images/clothes/upper/Lace-Trimmed Strappy Top-$12.99.png"),
+    name: "LACE-TRIMMED STRAPPY TOP",
+    price: "$12.99",
+    category: "Upper",
   },
   {
     id: 14,
-    src: require("@/assets/images/clothes/overall/1.png"),
-    name: "Maxi Skirt",
-    price: "$30.99",
-    category: "Overall",
+    src: require("@/assets/images/clothes/upper/Linen Shirt-$32.99.png"),
+    name: "LINEN SHIRT",
+    price: "$32.99",
+    category: "Upper",
   },
   {
     id: 15,
-    src: require("@/assets/images/clothes/overall/2.png"),
-    name: "Graphic T-Shirt",
-    price: "$19.99",
-    category: "Overall",
+    src: require("@/assets/images/clothes/lower/Linen-Blend Pants-$29.99.png"),
+    name: "LINEN-BLEND PANTS",
+    price: "$29.99",
+    category: "Lower",
   },
   {
     id: 16,
-    src: require("@/assets/images/clothes/overall/3.png"),
-    name: "Plain T-Shirt",
-    price: "$14.99",
-    category: "Overall",
+    src: require("@/assets/images/clothes/upper/Linen-Blend Shirt-$24.99.png"),
+    name: "LINEN-BLEND SHIRT",
+    price: "$24.99",
+    category: "Upper",
   },
   {
     id: 17,
-    src: require("@/assets/images/clothes/overall/4.png"),
-    name: "Casual Shirt",
-    price: "$14.99",
+    src: require("@/assets/images/clothes/lower/Linen-Blend Shorts-$19.99.png"),
+    name: "LINEN-BLEND SHORTS",
+    price: "$19.99",
+    category: "Lower",
+  },
+  {
+    id: 18,
+    src: require("@/assets/images/clothes/upper/Loose Fit Printed T-shirt-$9.99.png"),
+    name: "LOOSE FIT PRINTED T-SHIRT",
+    price: "$9.99",
+    category: "Upper",
+  },
+  {
+    id: 19,
+    src: require("@/assets/images/clothes/upper/Loose Fit Ribbed Resort Shirt-$34.99.png"),
+    name: "LOOSE FIT RIBBED RESORT SHIRT",
+    price: "$34.99",
+    category: "Upper",
+  },
+  {
+    id: 20,
+    src: require("@/assets/images/clothes/upper/Loose Fit T-shirt-$12.99.png"),
+    name: "LOOSE FIT T-SHIRT",
+    price: "$12.99",
+    category: "Upper",
+  },
+  {
+    id: 21,
+    src: require("@/assets/images/clothes/lower/Loose Straight High Jeans-$39.99.png"),
+    name: "LOOSE STRAIGHT HIGH JEANS",
+    price: "$39.99",
+    category: "Lower",
+  },
+  {
+    id: 22,
+    src: require("@/assets/images/clothes/lower/Maxi Skirt-$39.99.png"),
+    name: "MAXI SKIRT",
+    price: "$39.99",
+    category: "Lower",
+  },
+  {
+    id: 23,
+    src: require("@/assets/images/clothes/upper/One-Shoulder Top-$12.99.png"),
+    name: "ONE-SHOULDER TOP",
+    price: "$12.99",
+    category: "Upper",
+  },
+  {
+    id: 24,
+    src: require("@/assets/images/clothes/lower/Patterned Pull-On Shorts-$29.99.png"),
+    name: "PATTERNED PULL-ON SHORTS",
+    price: "$29.99",
+    category: "Lower",
+  },
+  {
+    id: 25,
+    src: require("@/assets/images/clothes/upper/Printed Shirt-$39.99.png"),
+    name: "PRINTED SHIRT",
+    price: "$39.99",
+    category: "Upper",
+  },
+  {
+    id: 26,
+    src: require("@/assets/images/clothes/upper/Regular Fit Hole-Knit T-Shirt-$29.99.png"),
+    name: "REGULAR FIT HOLE-KNIT T-SHIRT",
+    price: "$29.99",
+    category: "Upper",
+  },
+  {
+    id: 27,
+    src: require("@/assets/images/clothes/upper/Regular Fit Linen-Blend Polo Shirt-$39.99.png"),
+    name: "REGULAR FIT LINEN-BLEND POLO SHIRT",
+    price: "$39.99",
+    category: "Upper",
+  },
+  {
+    id: 28,
+    src: require("@/assets/images/clothes/upper/Regular Fit Rib-knit T-shirt-$24.99.png"),
+    name: "REGULAR FIT RIB-KNIT T-SHIRT",
+    price: "$24.99",
+    category: "Upper",
+  },
+  {
+    id: 29,
+    src: require("@/assets/images/clothes/upper/Regular Fit Textured shirt-$24.99.png"),
+    name: "REGULAR FIT TEXTURED SHIRT",
+    price: "$24.99",
+    category: "Upper",
+  },
+  {
+    id: 30,
+    src: require("@/assets/images/clothes/lower/Regular-Fit Canvas Shorts-$24.99.png"),
+    name: "REGULAR-FIT CANVAS SHORTS",
+    price: "$24.99",
+    category: "Lower",
+  },
+  {
+    id: 31,
+    src: require("@/assets/images/clothes/upper/Regular-Fit Linen Resort Shirt-$39.99.png"),
+    name: "REGULAR-FIT LINEN RESORT SHIRT",
+    price: "$39.99",
+    category: "Upper",
+  },
+  {
+    id: 32,
+    src: require("@/assets/images/clothes/lower/Regular-Fit Linen Shorts-$39.99.png"),
+    name: "REGULAR-FIT LINEN SHORTS",
+    price: "$39.99",
+    category: "Lower",
+  },
+  {
+    id: 33,
+    src: require("@/assets/images/clothes/upper/Regular-Fit Ribbed Resort Shirt-$39.99.png"),
+    name: "REGULAR-FIT RIBBED RESORT SHIRT",
+    price: "$39.99",
+    category: "Upper",
+  },
+  {
+    id: 34,
+    src: require("@/assets/images/clothes/lower/Regular-Fit Sweatshorts-$17.99.png"),
+    name: "REGULAR-FIT SWEATSHORTS",
+    price: "$17.99",
+    category: "Lower",
+  },
+  {
+    id: 35,
+    src: require("@/assets/images/clothes/upper/Regular-Fit Textured-Knit Resort Shirt-$42.99.png"),
+    name: "REGULAR-FIT TEXTURED-KNIT RESORT SHIRT",
+    price: "$42.99",
+    category: "Upper",
+  },
+  {
+    id: 36,
+    src: require("@/assets/images/clothes/lower/Sheer Pleated Skirt-$54.99.png"),
+    name: "SHEER PLEATED SKIRT",
+    price: "$54.99",
+    category: "Lower",
+  },
+  {
+    id: 37,
+    src: require("@/assets/images/clothes/upper/Slim Fit Polo Shirt-$29.99.png"),
+    name: "SLIM FIT POLO SHIRT",
+    price: "$29.99",
+    category: "Upper",
+  },
+  {
+    id: 38,
+    src: require("@/assets/images/clothes/lower/Straight linen-blend trousers-$39.99.png"),
+    name: "STRAIGHT LINEN-BLEND TROUSERS",
+    price: "$39.99",
+    category: "Lower",
+  },
+  {
+    id: 39,
+    src: require("@/assets/images/clothes/lower/Swim Shorts-$17.99.png"),
+    name: "SWIM SHORTS",
+    price: "$17.99",
+    category: "Lower",
+  },
+  {
+    id: 40,
+    src: require("@/assets/images/clothes/overall/Tie-belt Shirt Dress-$29.99.png"),
+    name: "TIE-BELT SHIRT DRESS",
+    price: "$29.99",
     category: "Overall",
+  },
+  {
+    id: 41,
+    src: require("@/assets/images/clothes/overall/Tie-Detail Maxi Dress-$39.99.png"),
+    name: "TIE-DETAIL MAXI DRESS",
+    price: "$39.99",
+    category: "Overall",
+  },
+  {
+    id: 42,
+    src: require("@/assets/images/clothes/lower/Tiered Maxi Skirt-$19.99.png"),
+    name: "TIERED MAXI SKIRT",
+    price: "$19.99",
+    category: "Lower",
+  },
+  {
+    id: 43,
+    src: require("@/assets/images/clothes/lower/Tiered Maxi Skirt-$42.99.png"),
+    name: "TIERED MAXI SKIRT",
+    price: "$42.99",
+    category: "Lower",
+  },
+  {
+    id: 44,
+    src: require("@/assets/images/clothes/lower/Wide-Leg Drawstring Pants-$24.99.png"),
+    name: "WIDE-LEG DRAWSTRING PANTS",
+    price: "$24.99",
+    category: "Lower",
+  },
+  {
+    id: 45,
+    src: require("@/assets/images/clothes/lower/Wide-leg Joggers-$17.99.png"),
+    name: "WIDE-LEG JOGGERS",
+    price: "$17.99",
+    category: "Lower",
+  },
+  {
+    id: 46,
+    src: require("@/assets/images/clothes/lower/Wide-Leg Twill Pants-$42.99.png"),
+    name: "WIDE-LEG TWILL PANTS",
+    price: "$42.99",
+    category: "Lower",
   },
 ];
 
@@ -152,8 +355,6 @@ export default function Clothes() {
   const colorScheme = useColorScheme();
   const dark = colorScheme === "dark";
 
-  // Destructure virtualTryOnImages as well if you need to read from it,
-  // but for this specific change, only setVirtualTryOnImages is strictly needed for the update.
   const { virtualTryOnImages, setVirtualTryOnImages } = useVirtualTryOn();
 
   const [searchText, setSearchText] = useState("");
@@ -185,26 +386,12 @@ export default function Clothes() {
     if (selectedItem) {
       const resolvedAsset = Image.resolveAssetSource(selectedItem.src);
       const clothUri = resolvedAsset ? resolvedAsset.uri : null;
-
-      console.log(
-        "Clothes.tsx (Try On) - Resolved cloth URI to be set:",
-        clothUri
-      );
-      console.log(
-        "Clothes.tsx (Try On) - Current modelImage from context:",
-        virtualTryOnImages.modelImage
-      );
-
       setVirtualTryOnImages((prev) => {
         const newState = {
           ...prev,
-          clothImage: clothUri, // Store the URI string
-          resultImage: null, // Clear previous result image
+          clothImage: clothUri,
+          resultImage: null,
         };
-        console.log(
-          "Clothes.tsx (Try On) - Context state AFTER update attempt:",
-          JSON.stringify(newState, null, 2)
-        );
         return newState;
       });
     }
@@ -214,9 +401,14 @@ export default function Clothes() {
 
   const renderItem = ({ item }: { item: ClothesItem }) => (
     <TouchableOpacity onPress={() => openModal(item)}>
-      <ThemedView style={{ alignItems: "flex-start" }}>
+      <ThemedView
+        style={{
+          alignItems: "flex-start",
+          width: 160, // Item container width
+        }}
+      >
         <Image
-          source={item.src} // Displays the local image via its require() ID
+          source={item.src}
           style={{
             width: 160,
             height: 160,
@@ -228,13 +420,15 @@ export default function Clothes() {
           fontWeight="semibold"
           textSize="sm"
           style={{ marginTop: 8 }}
+          numberOfLines={1}
+          ellipsizeMode="tail"
         >
           {item.name}
         </ThemedText>
         <ThemedText
           fontWeight="medium"
           textSize="sm"
-          style={{ color: "orange" }}
+          style={{ color: dark ? "orange" : "darkorange" }}
         >
           {item.price}
         </ThemedText>
@@ -256,7 +450,7 @@ export default function Clothes() {
           alignItems: "center",
           width: "100%",
           paddingHorizontal: 16,
-          marginTop: 32, // Assuming this screen doesn't have the same absolute positioned back button
+          marginTop: 32,
         }}
       >
         <Animated.View
@@ -270,15 +464,15 @@ export default function Clothes() {
             paddingHorizontal: 16,
             gap: 8,
             width: searchWidth.interpolate({
-              inputRange: [0, 1],
-              outputRange: ["80%", "100%"], // Shrinks to 80% when isSearching is true (0.1 in your effect maps to 80% here)
+              inputRange: [0.1, 1],
+              outputRange: ["80%", "100%"],
             }),
           }}
         >
           <Search />
           <TextInput
             placeholder="Search"
-            placeholderTextColor={dark ? "#FFFFFF" : "#000000"}
+            placeholderTextColor={dark ? "#A9A9A9" : "#808080"}
             value={searchText}
             onChangeText={setSearchText}
             onFocus={() => setIsSearching(true)}
@@ -312,7 +506,7 @@ export default function Clothes() {
 
       {/* Clothes List Area */}
       <ThemedView
-        style={{ width: "100%", alignItems: "center", marginTop: 32, flex: 1 }} // Added flex: 1 for FlatList to scroll properly
+        style={{ width: "100%", alignItems: "center", marginTop: 32, flex: 1 }}
       >
         <FlatList
           data={clothesData.filter((item) =>
@@ -341,7 +535,7 @@ export default function Clothes() {
         <ThemedView // Modal backdrop
           style={{
             flex: 1,
-            backgroundColor: "rgba(0,0,0,0.7)", // Darkened backdrop
+            backgroundColor: "rgba(0,0,0,0.7)",
             justifyContent: "center",
             alignItems: "center",
             padding: 16,
@@ -349,13 +543,13 @@ export default function Clothes() {
         >
           <ThemedView // Modal content container
             style={{
-              width: "90%", // Adjusted width
-              maxWidth: 400, // Max width for larger screens
-              borderRadius: 20, // Softer rounding
-              padding: 24, // Increased padding
+              width: "90%",
+              maxWidth: 400,
+              borderRadius: 20,
+              padding: 24,
               alignItems: "center",
-              backgroundColor: dark ? "#1C1C1E" : "#FFFFFF", // Theme-aware background
-              shadowColor: "#000", // Added shadow for depth
+              backgroundColor: dark ? "#1C1C1E" : "#FFFFFF",
+              shadowColor: "#000",
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.25,
               shadowRadius: 3.84,
@@ -365,46 +559,51 @@ export default function Clothes() {
             {selectedItem && (
               <>
                 <Image
-                  source={selectedItem.src} // Displays local image
+                  source={selectedItem.src}
                   style={{
-                    width: 200, // Adjusted size
-                    height: 200, // Adjusted size
-                    borderRadius: 16, // Softer rounding
+                    width: 200,
+                    height: 200,
+                    borderRadius: 16,
                     marginBottom: 20,
                     resizeMode: "contain",
                   }}
                 />
                 <ThemedText
-                  fontWeight="bold" // Bolder for title
-                  textSize="xl" // Adjusted size
+                  fontWeight="bold"
+                  textSize="xl"
                   style={{
                     color: dark ? "#FFFFFF" : "#000000",
                     marginBottom: 8,
+                    textAlign: "center", // Added text alignment
                   }}
                 >
                   {selectedItem.name}
                 </ThemedText>
                 <ThemedText
-                  fontWeight="semibold" // Semibold for price
+                  fontWeight="semibold"
                   textSize="lg"
-                  style={{ color: "orange", marginBottom: 24 }} // Added margin
+                  style={{
+                    color: "orange",
+                    marginBottom: 24,
+                    textAlign: "center",
+                  }} // Added text alignment for price too, for consistency
                 >
                   {selectedItem.price}
                 </ThemedText>
                 <ThemedView // Button container
                   style={{
-                    width: "100%", // Full width for buttons
+                    width: "100%",
                     flexDirection: "row",
-                    justifyContent: "space-between", // Ensure this works with gap
-                    backgroundColor: "transparent", // Make parent background transparent
-                    gap: 12, // Spacing between buttons
+                    justifyContent: "space-between",
+                    backgroundColor: "transparent", // Important for ThemedView if it has a default background
+                    gap: 12,
                   }}
                 >
                   <TouchableOpacity // Try On Button
-                    onPress={handleTryOnPress} // Use the new handler
+                    onPress={handleTryOnPress}
                     style={{
                       backgroundColor: "orange",
-                      paddingVertical: 14, // Adjusted padding
+                      paddingVertical: 14,
                       borderRadius: 10,
                       flex: 1,
                       alignItems: "center",
@@ -413,9 +612,9 @@ export default function Clothes() {
                     accessibilityLabel={`Try on ${selectedItem.name}`}
                   >
                     <ThemedText
-                      fontWeight="bold" // Bolder text
-                      textSize="md" // Adjusted size
-                      style={{ color: "#FFFFFF" }} // White text on orange
+                      fontWeight="bold"
+                      textSize="md"
+                      style={{ color: "#FFFFFF" }}
                     >
                       Try On
                     </ThemedText>
@@ -423,8 +622,8 @@ export default function Clothes() {
                   <Pressable // Close Button
                     onPress={closeModal}
                     style={{
-                      backgroundColor: dark ? "#3A3A3C" : "#E5E5EA", // Themed background
-                      paddingVertical: 14, // Adjusted padding
+                      backgroundColor: dark ? "#3A3A3C" : "#E5E5EA",
+                      paddingVertical: 14,
                       borderRadius: 10,
                       flex: 1,
                       alignItems: "center",
@@ -433,9 +632,9 @@ export default function Clothes() {
                     accessibilityLabel="Close modal"
                   >
                     <ThemedText
-                      fontWeight="bold" // Bolder text
-                      textSize="md" // Adjusted size
-                      style={{ color: dark ? "#FFFFFF" : "#000000" }} // Themed text
+                      fontWeight="bold"
+                      textSize="md"
+                      style={{ color: dark ? "#FFFFFF" : "#000000" }}
                     >
                       Close
                     </ThemedText>

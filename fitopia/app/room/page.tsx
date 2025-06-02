@@ -72,9 +72,9 @@ export default function Room() {
   const [selectedClothingImage, setSelectedClothingImage] = useState<
     string | null
   >(null);
-  const [resultImage, setResultImage] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [category, setCategory] = useState("upper");
+  // const [resultImage, setResultImage] = useState<string | null>(null);
+  // const [loading, setLoading] = useState(false);
+  // const [category, setCategory] = useState("upper");
   const [selectedPersonModel, setSelectedPersonModel] = useState<{
     src: string;
   } | null>(null);
@@ -163,49 +163,49 @@ export default function Room() {
     }
   };
 
-  const handleTryOn = async () => {
-    const sourceImage = selectedImage || selectedPersonModel?.src;
+  // const handleTryOn = async () => {
+  //   const sourceImage = selectedImage || selectedPersonModel?.src;
 
-    if (!sourceImage || !selectedClothingImage) {
-      alert("Please upload or select both a person photo and a clothing item.");
-      return;
-    }
+  //   if (!sourceImage || !selectedClothingImage) {
+  //     alert("Please upload or select both a person photo and a clothing item.");
+  //     return;
+  //   }
 
-    setLoading(true);
-    try {
-      const formData = new FormData();
-      formData.append(
-        "userPhoto",
-        await fetch(sourceImage).then((r) => r.blob()),
-        "user.jpg"
-      );
-      formData.append(
-        "clothingPhoto",
-        await fetch(selectedClothingImage).then((r) => r.blob()),
-        "clothing.png"
-      );
-      formData.append("category", category);
+  //   setLoading(true);
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append(
+  //       "userPhoto",
+  //       await fetch(sourceImage).then((r) => r.blob()),
+  //       "user.jpg"
+  //     );
+  //     formData.append(
+  //       "clothingPhoto",
+  //       await fetch(selectedClothingImage).then((r) => r.blob()),
+  //       "clothing.png"
+  //     );
+  //     formData.append("category", category);
 
-      const response = await fetch("http://localhost:8000/api/try-on", {
-        method: "POST",
-        body: formData,
-      });
+  //     const response = await fetch("http://localhost:8000/api/try-on", {
+  //       method: "POST",
+  //       body: formData,
+  //     });
 
-      const result = await response.json();
-      if (result.status === "success") {
-        const resultResponse = await fetch(
-          `http://localhost:8000/api/result/${result.result_id}`
-        );
-        const resultData = await resultResponse.json();
-        setResultImage(`data:image/png;base64,${resultData.resultPhoto}`);
-      }
-    } catch (error) {
-      console.error("Try-on error:", error);
-      alert("Error processing try-on");
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     const result = await response.json();
+  //     if (result.status === "success") {
+  //       const resultResponse = await fetch(
+  //         `http://localhost:8000/api/result/${result.result_id}`
+  //       );
+  //       const resultData = await resultResponse.json();
+  //       setResultImage(`data:image/png;base64,${resultData.resultPhoto}`);
+  //     }
+  //   } catch (error) {
+  //     console.error("Try-on error:", error);
+  //     alert("Error processing try-on");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const currentModels = activeGender === "men" ? menModels : womenModels;
   const totalPages = Math.ceil(currentModels.length / MODELS_PER_PAGE);
@@ -419,9 +419,9 @@ export default function Room() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col justify-center items-center gap-8">
+      {/* <div className="flex flex-col justify-center items-center gap-8"> */}
         {/* 🔥 Dropdown Category Selector */}
-        <select
+        {/* <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           className="border-2 border-[#171717] dark:border-white rounded-lg p-2 text-md font-bold"
@@ -437,9 +437,9 @@ export default function Room() {
         >
           {loading ? "Processing..." : "Try On"}
         </button>
-      </div>
+      </div> */}
       {/* Result Photo Section */}
-      <div className="relative flex justify-center items-center w-[300px] h-[400px] rounded-3xl shadow-xl border-2 border-[#171717] dark:border-white p-1">
+      {/* <div className="relative flex justify-center items-center w-[300px] h-[400px] rounded-3xl shadow-xl border-2 border-[#171717] dark:border-white p-1">
         {resultImage ? (
           <Image
             src={resultImage}
@@ -453,7 +453,7 @@ export default function Room() {
             <p className="font-bold text-md">Result Photo</p>
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   );
 }

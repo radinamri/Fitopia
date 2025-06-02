@@ -43,7 +43,7 @@ export default function RootLayout({
                 <Link href={"/"}>
                   <Image
                     className="rounded-lg"
-                    src="/fitopia-logo.png"
+                    src="/fitopia-new-logo.png"
                     width={64}
                     height={64}
                     alt="Logo"

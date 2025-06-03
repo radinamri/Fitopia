@@ -393,11 +393,22 @@ export default function Clothes() {
     if (selectedItem) {
       const resolvedAsset = Image.resolveAssetSource(selectedItem.src);
       const clothUri = resolvedAsset ? resolvedAsset.uri : null;
+      // 1. Get the source for the static result image
+      const staticResultImageSource = require("@/assets/images/result/result-2.png");
+      console.log("RESULT 2")
+      // 2. Resolve the asset source to get its details, including the URI
+      const resolvedResultAsset = Image.resolveAssetSource(
+        staticResultImageSource
+      );
+      // 3. Extract the URI
+      const resultImageUri = resolvedResultAsset
+        ? resolvedResultAsset.uri
+        : null;
       setVirtualTryOnImages((prev) => {
         const newState = {
           ...prev,
           clothImage: clothUri,
-          resultImage: null,
+          resultImage: resultImageUri,
         };
         return newState;
       });

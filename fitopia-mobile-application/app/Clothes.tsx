@@ -349,6 +349,13 @@ const clothesData: ClothesItem[] = [
     price: "$42.99",
     category: "Lower",
   },
+  {
+    id: 47,
+    src: require("@/assets/images/clothes/upper/Metallica T-Shirt-$15.99.png"),
+    name: "METALLICA T-SHIRT",
+    price: "$15.99",
+    category: "Upper",
+  },
 ];
 
 export default function Clothes() {

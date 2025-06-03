@@ -189,7 +189,7 @@ export default function Preview() {
             <Image
               source={{ uri: currentImage }}
               style={{ width: "100%", height: "100%" }}
-              resizeMode="contain" // Changed to contain for better visibility
+              resizeMode="cover"
             />
           ) : (
             <Image // Fallback placeholder
